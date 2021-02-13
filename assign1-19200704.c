@@ -204,7 +204,7 @@ void odd_even (int p){
     fp = fopen(optarg, "r");
     if (fp != NULL)
     {
-        printf("Odd or Even of file:\n");
+        printf("%s lines of %s:\n",(p==1?"Odd":"Even"),optarg);
 
         while ((read = getline(&line, &len, fp)) != -1)
         {   
