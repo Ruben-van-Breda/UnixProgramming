@@ -17,8 +17,15 @@ void odd_even(int p);
 #define MAX_LINE_LENGTH 100
 #define MAX_NUM_LINES 100
 
-int numOfLines = 5;
-
+int numOfLines = 10;
+void print_manaul()
+{
+    printf("\nDeveloped by Ruben van Breda, 19200704\t 14 Feb 2020\nDesc:\n\t"
+    "This program can read in and print out the first|last n lines from a file argument. \n\tThe options -e -o prints out the even or odd lines contained in the file ");
+    printf("\nUsage: \n\t-n <Integer> number of lines to read ( Defualt 10)\n\t-h <file> : header of a file\n\t-t <file> : tail of a file\n\t"
+    "-v  : version\n");
+    exit(1);
+}
 int main(int argc, char **argv)
 {
     int option;
@@ -27,7 +34,7 @@ int main(int argc, char **argv)
     int kflag;
     int eflag;
    
-    while ((option = getopt(argc, argv, "e:o:h:n:t:v")) != -1)
+    while ((option = getopt(argc, argv, "e:o:h::n::t::vi")) != -1)
     {
         switch (option)
         {
@@ -90,8 +97,15 @@ int main(int argc, char **argv)
         case 'v':
             printf("Ruben van Breda,\truben.vanbreda@ucdconnect.ie,\t19200704\n");
             break;
+        case ':':
+            printf("Jellow My Mellow");
+            break;
         case 'n':
             numOfLines = atoi(optarg);
+            break;
+        case 'i':
+            print_manaul();
+            exit(0);
             break;
         default:
             printf("Error");
@@ -100,11 +114,7 @@ int main(int argc, char **argv)
     //printf("%s",argv[3]);
     return 0;
 }
-void print_manaul()
-{
-    printf("\nUsage: -h <file> | -t <file>\n");
-    exit(1);
-}
+
 
 void head_of_file(int n)
 {
@@ -137,7 +147,7 @@ void head_of_file(int n)
     }
     else
     {
-        printf("File could not be opened.");
+        printf("File could not be opened. %s",optarg);
     }
     fclose(fp);
 }
@@ -156,32 +166,32 @@ void tail_of_file(int n)
 
     //char content[MAX_NUM_LINES][MAX_LINE_LENGTH];
     char strArray[150][150];
-    if (optarg == 0)
-    {
-        printf("File could not be opened.");
-        return;
-    }
+    // if (optarg == 0)
+    // {
+    //     printf("File could not be opened.");
+    //     return;
+    // }
     // has file argument
     fp = fopen(optarg, "r");
 
     if (fp != NULL)
     {
 
-        while ((read = getline(&line, &len, fp)) != -1) // poor counting the lines in the file
+        while ((read = getline(&line, &len, fp)) != -1) // loop thru lines and add them to the strArray
         {
             // fgets(line, 100, fp);
             int i = 0;
-            while(line[i] != '\n'){
+            while(line[i] != '\n'){ // loop thru the characters in the current line
                 strArray[counter][i] = line[i];
                 i++;
             }
             
-            counter++;
-            // /printf("%s", line);
+            counter++;//counts the number of lines in the file
+         
         }
         int n = 0;
        
-        // printf("Counter %d", counter);
+        
         for(int i = 0; i <counter;i++){
             if(i >= counter-numOfLines){
                 printf("%s\n", strArray[i]);         
@@ -192,7 +202,8 @@ void tail_of_file(int n)
 
     else
     {
-        printf("File could not be opened.");
+        printf("File could not be opened. %s",optarg);
+
     }
     fclose(fp);
 }
@@ -206,15 +217,18 @@ void odd_even(int p)
     size_t len = 0;
     ssize_t read;
 
+    int parity = 0;
+    int counter;
     if (optarg == 0)
     {
         printf("File could not be opened.");
     }
     // has file argument
     fp = fopen(optarg, "r");
-    int parity = 0;
+   
     // has file argument
     fp = fopen(optarg, "r");
+    counter = 0;
     if (fp != NULL)
     {
         printf("%s lines of %s:\n", (p == 1 ? "Odd" : "Even"), optarg);
@@ -227,6 +241,7 @@ void odd_even(int p)
                 if (parity % 2 == 0) // odd
                 {
                     printf("%s", line);
+                    counter++;
                 }
             }
             else if (p == 2)
@@ -234,9 +249,15 @@ void odd_even(int p)
                 if (parity % 2 != 0) // even
                 {
                     printf("%s", line);
+                    counter++;
                 }
+                
             }
             parity++;
+          
+            if(numOfLines != 0 &&counter >= numOfLines){
+                break;
+            }
         }
     }
     else
