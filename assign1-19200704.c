@@ -12,10 +12,13 @@ void print_manaul();
 void head_of_file(int n);
 void tail_of_file(int n);
 int lineCount(char *str);
-void odd_even (int p);
+void odd_even(int p);
 
 #define MAX_LINE_LENGTH 100
 #define MAX_NUM_LINES 100
+
+int numOfLines = 5;
+
 int main(int argc, char **argv)
 {
     int option;
@@ -23,8 +26,7 @@ int main(int argc, char **argv)
     int tflag; // tail flag
     int kflag;
     int eflag;
-    int numOfLines = 5;
-
+   
     while ((option = getopt(argc, argv, "e:o:h:n:t:v")) != -1)
     {
         switch (option)
@@ -38,7 +40,7 @@ int main(int argc, char **argv)
             {
                 hflag++;
                 tflag++;
-                kflag++; 
+                kflag++;
                 eflag++; // increase to avoid errors in arguments
             }
             head_of_file(numOfLines);
@@ -53,7 +55,7 @@ int main(int argc, char **argv)
                 hflag++;
                 tflag++;
                 kflag++;
-                eflag++;  // increase to avoid errors in arguments
+                eflag++; // increase to avoid errors in arguments
             }
             tail_of_file(numOfLines);
             break;
@@ -147,12 +149,13 @@ void tail_of_file(int n)
     FILE *fp;        // pointer to file
     char *file_name; // file path
     char cur_char;
-    char line[MAX_LINE_LENGTH]; // line array
+    char *line = NULL; // line array
     size_t len = 0;
     ssize_t read;
     int counter = 0;
 
-    char *content = "";
+    //char content[MAX_NUM_LINES][MAX_LINE_LENGTH];
+    char strArray[150][150];
     if (optarg == 0)
     {
         printf("File could not be opened.");
@@ -164,17 +167,26 @@ void tail_of_file(int n)
     if (fp != NULL)
     {
 
-        while (!feof(fp))
+        while ((read = getline(&line, &len, fp)) != -1) // poor counting the lines in the file
         {
-            fgets(line, MAX_LINE_LENGTH, fp);
-            content[counter] = &line;
+            // fgets(line, 100, fp);
+            int i = 0;
+            while(line[i] != '\n'){
+                strArray[counter][i] = line[i];
+                i++;
+            }
+            
             counter++;
-            printf("%s", line);
+            // /printf("%s", line);
         }
-
-        for (int i = 0; i < counter; i++)
-        {
-            printf("%d, %c\n", i, (content + i));
+        int n = 0;
+       
+        // printf("Counter %d", counter);
+        for(int i = 0; i <counter;i++){
+            if(i >= counter-numOfLines){
+                printf("%s\n", strArray[i]);         
+            }
+            
         }
     }
 
@@ -185,7 +197,8 @@ void tail_of_file(int n)
     fclose(fp);
 }
 
-void odd_even (int p){
+void odd_even(int p)
+{
     FILE *fp;
     char *file_name;
 
@@ -199,34 +212,37 @@ void odd_even (int p){
     }
     // has file argument
     fp = fopen(optarg, "r");
-    int parity=0;
-      // has file argument
+    int parity = 0;
+    // has file argument
     fp = fopen(optarg, "r");
     if (fp != NULL)
     {
-        printf("%s lines of %s:\n",(p==1?"Odd":"Even"),optarg);
+        printf("%s lines of %s:\n", (p == 1 ? "Odd" : "Even"), optarg);
 
         while ((read = getline(&line, &len, fp)) != -1)
-        {   
-            if(p == 1){ 
-                if(parity%2 == 0){
+        {
+            if (p == 1)
+            {
+
+                if (parity % 2 == 0) // odd
+                {
                     printf("%s", line);
                 }
-            } // odd
-            if(p == 2){ 
-                if(parity%2 != 0){
+            }
+            else if (p == 2)
+            {
+                if (parity % 2 != 0) // even
+                {
                     printf("%s", line);
                 }
-            } // even
-           
+            }
             parity++;
-            
-           
         }
     }
     else
     {
-        printf("File could not be opened.");
+        perror("File could not be opened.");
+        exit(-1);
     }
     fclose(fp);
 }
