@@ -24,6 +24,8 @@ void print_manaul()
     "This program can read in and print out the first|last n lines from a file argument. \n\tThe options -e -o prints out the even or odd lines contained in the file ");
     printf("\nUsage: \n\t-n <Integer> number of lines to read ( Defualt 10)\n\t-h <file> : header of a file\n\t-t <file> : tail of a file\n\t"
     "-v  : version\n");
+    printf("note: I did not implement reading from standard input as Im not sure what\nyou will do with 1 string of text ? whould the lines then be split spaces?"
+    "\nNot to sure. So works with files. \n");
     exit(1);
 }
 int main(int argc, char **argv)
@@ -165,7 +167,7 @@ void tail_of_file(int n)
     int counter = 0;
 
     //char content[MAX_NUM_LINES][MAX_LINE_LENGTH];
-    char strArray[150][150];
+    char strArray[MAX_NUM_LINES][MAX_LINE_LENGTH];
     // if (optarg == 0)
     // {
     //     printf("File could not be opened.");
