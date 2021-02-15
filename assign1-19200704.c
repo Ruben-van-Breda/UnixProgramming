@@ -14,8 +14,8 @@ void tail_of_file(int n);
 int lineCount(char *str);
 void odd_even(int p);
 
-#define MAX_LINE_LENGTH 100
-#define MAX_NUM_LINES 100
+#define MAX_LINE_LENGTH 1000
+#define MAX_NUM_LINES 1000
 
 int numOfLines = 10;
 void print_manaul()
@@ -24,7 +24,8 @@ void print_manaul()
     "This program can read in and print out the first|last n lines from a file argument. \n\tThe options -e -o prints out the even or odd lines contained in the file ");
     printf("\nUsage: \n\t-n <Integer> number of lines to read ( Defualt 10)\n\t-h <file> : header of a file\n\t-t <file> : tail of a file\n\t"
     "-v  : version\n");
-    printf("note: I did not implement reading from standard input as Im not sure what\nyou will do with 1 string of text ? whould the lines then be split spaces?"
+    printf("I did not come around to dynamically allocating the size of the array with malloc,\nbut have a fixed size already defined.\n");
+    printf("note: I did not implement reading from standard input as Im not sure what\nyou will do with 1 string of text ? whould the lines then be split by spaces?"
     "\nNot to sure. So works with files. \n");
     exit(1);
 }
