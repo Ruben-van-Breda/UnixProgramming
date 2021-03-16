@@ -8,9 +8,10 @@
 #include <sys/types.h>
 #include <getopt.h>
 #include <sys/wait.h>
-extern char **environ;
-char **get_command(char *str, char **out);
+#include <signal.h>
 
-void  execute_command (char **argv, char ** environ);
+char **get_command(char *str, char **out);
+void command_input(char** str);
+int execute_command (char **argv, char ** environ);
 int run_command(char **com, char **argv, char **environ);
 #endif
