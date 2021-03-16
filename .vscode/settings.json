@@ -3,6 +3,9 @@
         "stdlib.h": "c",
         "rectangle.h": "c",
         "stdio.h": "c",
-        "ios": "c"
+        "ios": "c",
+        "my_shell.h": "c",
+        "unistd.h": "c",
+        "types.h": "c"
     }
 }
