@@ -9,8 +9,8 @@
 #include <getopt.h>
 #include <sys/wait.h>
 extern char **environ;
-char **get_command(char *str, char **out);
+char **get_command(char *str);
 
 int execute_command (char **argv, char ** environ);
-int run_command(char **com, char **argv, char **environ);
+int run_command(char **argv, char **environ);
 #endif

@@ -1,23 +1,10 @@
 #include "my_shell.h"
 
 int execute_command (char **argv, char ** environ){
-    // printf("execute_command");
-    int len = sizeof(char*)/sizeof(argv[0]);
-    char command[100] = "/bin/";
-
-    strcat(command,argv[0]);
-    
-    // for(int i = 1; i < len; i++){
-    //     printf(" str [%d] -> %s",i,argv[i]);
-    //     argv[i] = argv[i-1];
-    // }
-    // command[len] = '\0';
-    printf("\nChild process. is running command %s\n",argv[0]);
+   
+    // printf("\nChild process. is running command %s\n",argv[0]);
     execvp(argv[0], argv);
-    // execve(command, argv, environ);
-    // execv("/bin/sh/",argv);
-    // execl(command,*argv);
-    // system(*argv);
+
     return 1;
 }
 

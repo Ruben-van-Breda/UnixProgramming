@@ -19,15 +19,7 @@ int main(int argc, char **argv)
     size_t size = 150;
     char *line;
     line = calloc(sizeof(char *), size);
-    // line = malloc(sizeof(char *)*size);
-    // for(int i = 0; i < size;i++){
-    //    printf("%c ",*line);
-    //     (++line);
-    // }
-    char command[150];
-    // get_command(command);
-    // printf("Command is %s\n",command);
-    // run_command(command, argv, environ);
+  
 
     while (getline(&line, &size, stdin) != -1)
     {
@@ -40,30 +32,23 @@ int main(int argc, char **argv)
         {
             user_com[i] = (char *)malloc(50 * sizeof(char));
         }
-        get_command(line, user_com);
-        printf("Got command %s",*user_com);
-        run_command(user_com, argv, environ);
+        user_com = get_command(line);
+        // printf("Got command %s",*user_com);
+        run_command(user_com, environ);
         sleep(1);
-        printf("#");
+        // printf("#");
         // line = realloc(line,sizeof(char *)*size);
     }
 
     return 0;
 }
 
-char **get_command(char *com, char **out)
+char **get_command(char *com)
 {
     int count = 0;
-    // printf("$");
-    //scanf("%s", com);
-    // out = (char **)malloc(10 * sizeof(char *));
-    // for (int i = 0; i < 10; i++)
-    // {
-    //     out[i] = (char *)malloc(50 * sizeof(char));
-    // }
     // split command
     char *str = strtok(com, " ");
-
+    char **out = malloc(8 * sizeof(char *));
     //printf("piece %s\n", str);
     while (str != NULL)
     {
@@ -74,50 +59,25 @@ char **get_command(char *com, char **out)
         str = strtok(NULL, " ");
     }
 
-    // printf("args = %d", count);
-
-    // int len = strlen(*out);
-    // **(out + len - 1) = '\0';
     out[count] = NULL; // add null terminator
-
-    // for (int i = 0; i < count; i++)
-    // {
-
-    //     printf("OUT[%d] %s\n", i, out[i]);
-    // }
 
     return out;
     //catch SIGNALS
 }
 
-int run_command(char **com, char **argv, char **environ)
+int run_command(char **argv, char **environ)
 {
     
-    int len = sizeof(char*)/sizeof(com[0]);
-    printf("Running command len %d %s\n",len,*com);
-    // argv[0] = com[0];
-    // for(int i = 1; i <= len; i++){
-    //     // printf("Char %c ",*com[i]);
-    //     argv[i] = com[i];
-    //     printf("%s ",argv[i-1]);
-    // }
-
-    // while (*com[i] != '\0')
-    // {
-    //     printf("arg[%d] -> %s", i, com[i]);
-    //     argv[i] = com[i];
-    //     i++;
-    // }
-  
-    // char* command = strcat("/bin/",com[0]);
-
+    // int len = sizeof(char*)/sizeof(com[0]);
+    // printf("Running command len %d %s\n",len,*com);
+ 
     child_pid = fork();
 
     if (child_pid == 0)
     {
 
-        *argv = *com;
-        execute_command(com, environ);
+      
+        execute_command(argv, environ);
     }
 
     else
@@ -125,6 +85,6 @@ int run_command(char **com, char **argv, char **environ)
         waitpid(child_pid, &pid_status, 0);
         return 0;
     }
-
+    free(argv);
     return 0;
 }
