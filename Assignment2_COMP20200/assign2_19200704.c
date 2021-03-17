@@ -41,42 +41,10 @@ int main(int argc, char **argv)
             user_com[i] = (char *)malloc(50 * sizeof(char));
         }
         get_command(line, user_com);
+        printf("Got command %s",*user_com);
         run_command(user_com, argv, environ);
         sleep(1);
-        // if (strcmp(line, "ls") == 0)
-        // {
-        //     // printf("List Directory...\n");
-        //     int f = fork();
-        //     if (f == 0)
-        //     {
-        //         execve("/bin/ls", argv, environ);
-        //         return 0;
-        //     }
-        //     else
-        //     {
-        //         // printf("waiting for child  process...\n");
-        //         waitpid(f, &pid_status, 0);
-        //         // printf("child  process complete.\n");
-        //     }
-        // }
-
-        // if (strcmp(line, "pwd") == 0)
-        // {
-        //     // printf("List Directory...\n");
-        //     int f = fork();
-        //     if (f == 0)
-        //     {
-        //         execve("/bin/pwd", argv, environ);
-        //         return 0;
-        //     }
-        //     else
-        //     {
-        //         // printf("waiting for child  process...\n");
-        //         waitpid(f, &pid_status, 0);
-        //         // printf("child  process complete.\n");
-        //     }
-        // }
-
+        printf("#");
         // line = realloc(line,sizeof(char *)*size);
     }
 
@@ -107,60 +75,49 @@ char **get_command(char *com, char **out)
     }
 
     // printf("args = %d", count);
-    for (int i = 0; i < count; i++)
-    {
 
-        // printf("OUT %s\n", out[i]);
-    }
-    int len = strlen(*out);
-    **(out + len - 1) = '\0';
+    // int len = strlen(*out);
+    // **(out + len - 1) = '\0';
+    out[count] = NULL; // add null terminator
+
+    // for (int i = 0; i < count; i++)
+    // {
+
+    //     printf("OUT[%d] %s\n", i, out[i]);
+    // }
+
     return out;
     //catch SIGNALS
 }
 
 int run_command(char **com, char **argv, char **environ)
 {
-    printf("Running command %s\n", com[0]);
-    int i = 0;
-    // while(com[i] != 0){
-    //     printf("arg[%d] -> %s",i,com[i]);
-    //     i++;
+    
+    int len = sizeof(char*)/sizeof(com[0]);
+    printf("Running command len %d %s\n",len,*com);
+    // argv[0] = com[0];
+    // for(int i = 1; i <= len; i++){
+    //     // printf("Char %c ",*com[i]);
+    //     argv[i] = com[i];
+    //     printf("%s ",argv[i-1]);
     // }
 
+    // while (*com[i] != '\0')
+    // {
+    //     printf("arg[%d] -> %s", i, com[i]);
+    //     argv[i] = com[i];
+    //     i++;
+    // }
+  
     // char* command = strcat("/bin/",com[0]);
 
     child_pid = fork();
-    printf("run_command _");
+
     if (child_pid == 0)
-    {   
-        printf("run_command");
-        argv[0] = com[0];
-        execute_command(argv, environ);
+    {
 
-        // if (strcmp(com[0], "ls") == 0)
-        // {
-        //     // system("ls /");
-        //     execve("/bin/ls", argv, environ);
-
-        //     sleep(10);
-        //     // com_ls(argv, environ);
-        //     // exit(0);
-        // }
-
-        // if (strcmp(com[0], "pwd") == 0)
-        // {
-        //     // system("ls /");
-        //     execve("/bin/pwd", argv, environ);
-
-        //     sleep(10);
-        //     // com_ls(argv, environ);
-        //     // exit(0);
-        // }
-        // else
-        // {
-        //     //  execvp(command,argv);
-        // }
-        
+        *argv = *com;
+        execute_command(com, environ);
     }
 
     else

@@ -11,6 +11,6 @@
 extern char **environ;
 char **get_command(char *str, char **out);
 
-void  execute_command (char **argv, char ** environ);
+int execute_command (char **argv, char ** environ);
 int run_command(char **com, char **argv, char **environ);
 #endif
