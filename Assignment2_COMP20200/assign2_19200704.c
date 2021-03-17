@@ -1,29 +1,24 @@
 
 #include "my_shell.h"
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <getopt.h>
-#include <sys/wait.h>
+
 extern char **environ;
 int pid_status;
 int child_pid;
 int main(int argc, char **argv)
 {
     char prompt[10];
-    printf("Welcome\n#");
-
+    printf("Welcome\n");
+    print_prompt();
     size_t size = 150;
     char *line;
     line = calloc(sizeof(char *), size);
   
-
+    signal(SIGINT,sig_handler);
     while (getline(&line, &size, stdin) != -1)
     {
-        printf("#");
+        // printf("#");
+        signal(SIGINT,sig_handler);
+        print_prompt();
         int len = strlen(line);
         *(line + len - 1) = '\0'; // remove the null character
 
@@ -39,9 +34,10 @@ int main(int argc, char **argv)
         // printf("#");
         // line = realloc(line,sizeof(char *)*size);
     }
-
+    signal(SIGINT,sig_handler);
     return 0;
 }
+
 
 char **get_command(char *com)
 {
@@ -75,7 +71,7 @@ int run_command(char **argv, char **environ)
 
     if (child_pid == 0)
     {
-
+        
       
         execute_command(argv, environ);
     }

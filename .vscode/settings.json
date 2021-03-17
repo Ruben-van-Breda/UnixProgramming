@@ -6,6 +6,8 @@
         "ios": "c",
         "my_shell.h": "c",
         "unistd.h": "c",
-        "types.h": "c"
+        "types.h": "c",
+        "__locale": "c",
+        "locale": "c"
     }
 }
