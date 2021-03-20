@@ -1,7 +1,5 @@
 #include "my_shell.h"
 
-
-
 // void command_input(char** str){
 //     int argCounter = 0;
 //     printf("Str: %s\n",str);
@@ -19,62 +17,62 @@
 
 //     // char** args = malloc(argCounter * sizeof(char));
 //     for(int i = 0; i < argCounter;i++){
-      
+
 //         printf("out %s\n",(str[i]));
 //     }
 //     printf("argC = %d, *str %s",argCounter,*str);
 // }
 
-
 int execute_command(char **argv, char **environ)
 {
 
     // printf("\nChild process. is running command %s\n",argv[0]);
-    // if(strcmp(argv[0], "cd") != 0 & strcmp(argv[2], ">") != 0){
-    //     execvp(argv[0], argv);
-    // }
-    //PIPE
-    // printf("%s",argv[2]);
-    // int _piping = isPiping(argv);
-    // if(_piping == 1){
-    //     printf("IS PIPING");
-    // }
-     if (strcmp(argv[0], "cd") == 0)
+
+    if (strcmp(argv[0], "cd") == 0)
     {
-        
+
         if (chdir(argv[1]) == -1)
         {
             perror("");
         }
     }
- 
-   
-        
-    else{
-         execvp(argv[0], argv);
+    else if (strcmp(argv[0], "help") == 0)
+    {
 
-         if(argv[2] != NULL && strcmp(argv[2], ">") == 0){
-            printf("True");
-            char* na [3];
+        
+            perror("-v for version and -i for information.\nCurrently having trouble having the piping and basics commands at the same time for some reason.\n");
+        
+    }
+
+    else
+    {
+
+        // execvp(argv[0], argv);
+        if (argv[2][0] == '>')
+        {
+            // printf("True");
+            char *na[3];
             na[0] = argv[0];
             na[1] = argv[1];
             na[2] = NULL;
+            execvp(argv[0], na);
             redirect(na);
-
         }
-       
+        else
+        {
+            execvp(argv[0], argv);
+        }
         printf("False");
-        
-       
-        
-         
     }
-    
+
     return 1;
 }
-int isPiping(char **str){
-    while(**str != '\0'){
-        if(**str == '>'){
+int isPiping(char **str)
+{
+    while (**str != '\0')
+    {
+        if (**str == '>')
+        {
             return 1;
         }
         str = str + 1;
@@ -104,15 +102,15 @@ void sig_handler(int signo)
     // print_prompt();
 }
 
-void redirect(char ** argv)
+void redirect(char **argv)
 {
-    printf("REDIRECTING");
-    char * new_args[3];
-    
+    // printf("REDIRECTING");
+    // char * new_args[3];
+
     // new_args[0] = argv[0];
     // new_args[1] = argv[1];
     // new_args[2] = NULL;
-    // execv(argv[0], new_args);
+
     // sleep(0.4);
     const char *filename = "myout.txt";
     if (filename)
@@ -126,4 +124,3 @@ void redirect(char ** argv)
     }
     return;
 }
-
