@@ -7,6 +7,14 @@
         "my_shell.h": "c",
         "unistd.h": "c",
         "types.h": "c",
+<<<<<<< HEAD
         "sstream": "c"
+=======
+        "__locale": "c",
+        "locale": "c",
+        "time.h": "c",
+        "getopt.h": "c",
+        "wait.h": "c"
+>>>>>>> 3c8a35d8882000ca1c5ad6b6e1361c42d873fd7a
     }
 }

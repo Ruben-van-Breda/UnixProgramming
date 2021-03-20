@@ -1,39 +1,30 @@
 
 #include "my_shell.h"
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <getopt.h>
-#include <sys/wait.h>
+
+#define LEN(arr) ((char) (sizeof (arr) / sizeof (arr)[0]))/sizeof(char)
 extern char **environ;
+int arg_len = 0;
 int pid_status;
 int child_pid;
-int arg_len = 0;
-#define LEN(arr) ((char) (sizeof (arr) / sizeof (arr)[0]))/sizeof(char)
 int main(int argc, char **argv)
 {
-    char prompt[10];
-    printf("Welcome\n$");
+    
+    passed_arguments(argc,argv);
+   
 
+    char prompt[10];
+    printf("\nRubio_Shell\n");
+    print_prompt();
     size_t size = 150;
     char *line;
     line = calloc(sizeof(char *), size);
-    // line = malloc(sizeof(char *)*size);
-    // for(int i = 0; i < size;i++){
-    //    printf("%c ",*line);
-    //     (++line);
-    // }
-    char command[150];
-    // get_command(command);
-    // printf("Command is %s\n",command);
-    // run_command(command, argv, environ);
-
+  
+    signal(SIGINT,sig_handler);
     while (getline(&line, &size, stdin) != -1)
     {
-        printf("$");
+        
+        signal(SIGINT,sig_handler);
+        print_prompt();
         int len = strlen(line);
         *(line + len - 1) = '\0'; // remove the null character
 
@@ -42,146 +33,96 @@ int main(int argc, char **argv)
         {
             user_com[i] = (char *)malloc(50 * sizeof(char));
         }
-        get_command(line, user_com);
-        // command_input(&line);
-
-        run_command(user_com, argv, environ);
-        printf("$");
-        // sleep(1);
-        // if (strcmp(line, "ls") == 0)
-        // {
-        //     // printf("List Directory...\n");
-        //     int f = fork();
-        //     if (f == 0)
-        //     {
-        //         execve("/bin/ls", argv, environ);
-        //         return 0;
-        //     }
-        //     else
-        //     {
-        //         // printf("waiting for child  process...\n");
-        //         waitpid(f, &pid_status, 0);
-        //         // printf("child  process complete.\n");
-        //     }
-        // }
-
-        // if (strcmp(line, "pwd") == 0)
-        // {
-        //     // printf("List Directory...\n");
-        //     int f = fork();
-        //     if (f == 0)
-        //     {
-        //         execve("/bin/pwd", argv, environ);
-        //         return 0;
-        //     }
-        //     else
-        //     {
-        //         // printf("waiting for child  process...\n");
-        //         waitpid(f, &pid_status, 0);
-        //         // printf("child  process complete.\n");
-        //     }
-        // }
-
-        // line = realloc(line,sizeof(char *)*size);
+        user_com = get_command(line);
+        
+        run_command(user_com, environ);
+        sleep(1);
+        
     }
-
+    signal(SIGINT,sig_handler);
     return 0;
 }
 
-char **get_command(char *com, char **out)
+
+char** get_command(char *com)
 {
-    
-    printf("line %s",com);
-    //scanf("%s", com);
-    out = (char **)malloc(10 * sizeof(char *));
-    for (int i = 0; i < 10; i++)
-    {
-        out[i] = (char *)malloc(50 * sizeof(char));
-    }
+    int count = 0;
     // split command
     char *str = strtok(com, " ");
-
-    printf("piece %s\n", str);
+    char **out = malloc(8 * sizeof(char *));
+    
     while (str != NULL)
     {
-        // printf("args(%d) is %s", count, str);
-        out[arg_len] = str;
-        arg_len++;
-        out = realloc(out, (arg_len + 1) * sizeof(char *));
+        out[count] = str;
+        count++;
+        out = realloc(out, (count + 1) * sizeof(char *));
         str = strtok(NULL, " ");
     }
 
-    // printf("args = %d", count);
-    for (int i = 0; i < arg_len; i++)
-    {
+    out[count] = NULL; // add null terminator
 
-        printf("OUT %s\n", out[i]);
-    }
-    int len = strlen(*out);
-    **(out + len - 1) = '\0';
     return out;
     //catch SIGNALS
 }
 
-int run_command(char **com, char **argv, char **environ)
+int run_command(char **argv, char **environ)
 {
-    //printf("Running command %s\n", com[0]);
+    
   
-    argv[0] = com[0];
-    for(int i = 1; i < arg_len; i++){
-        *argv[i-1] = *com[i]; 
-    }
-    for(int i = 0; i < arg_len; i++){
-        printf("arguments %s",argv[i]);
-    }
+    child_pid = fork();
 
-    int len = sizeof(*com) / sizeof(com[0]);
-    printf("argc = %ul\n",arg_len);
-
-    char* command = strcat("/bin/",com[0]);
-
-    int child_pid = fork();
-  
     if (child_pid == 0)
-    {   
+    {
         
-        
-        // if(*com[1] != '\0'){
-        //     printf("ARG{1} %s",com[1]);
-        // }
-        execute_command(argv, environ);
-        // waitpid(child_pid,&pid_status,0);
-        
-       
-        return 1;
-        // if (strcmp(com[0], "ls") == 0)
-        // {
-        //     // system("ls /");
-        //     execve("/bin/ls", argv, environ);
-
-        //     sleep(10);
-        //     // com_ls(argv, environ);
-        //     // exit(0);
-        // }
-
-        // if (strcmp(com[0], "pwd") == 0)
-        // {
-        //     // system("ls /");
-        //     execve("/bin/pwd", argv, environ);
-
-        //     sleep(10);
-        //     // com_ls(argv, environ);
-        //     // exit(0);
-        // }
-        // else
-        // {
-        //     //  execvp(command,argv);
-        // }
       
-    }else{
-        printf("Parent\n");
+        execute_command(argv, environ);
     }
 
-    // waitpid(child_pid,&pid_status,0);
+    else
+    {
+        waitpid(child_pid, &pid_status, 0);
+        return 0;
+    }
+    free(argv);
     return 0;
+}
+
+void passed_arguments(int argc, char**argv){
+    int option;
+  
+    int vflag; // header flag
+    int iflag; // tail flag
+  
+    option = getopt(argc, argv, "vi");
+    if(option != -1)
+    {
+        switch (option)
+        {
+        case 'v':
+            if (vflag)
+            {
+               printf("kop\n");
+            }
+            else
+            {
+                vflag++;
+                iflag++;
+            }
+            printf("MY_Shell Version : %s","S");
+            break;
+        case 'i':
+        if (iflag)
+            {
+               printf("kop\n");
+            }
+            else
+            {
+                vflag++;
+                iflag++;
+            }
+            printf("Made by Ruben van Breda, 19200704. Bugs: Version : %s","Ss");
+            break;
+        }
+    }
+    return;
 }
