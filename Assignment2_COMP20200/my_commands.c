@@ -9,48 +9,59 @@ int execute_command(char **argv, char **environ)
     // }
     //PIPE
     // printf("%s",argv[2]);
-    int _piping = isPiping(argv);
-    if(_piping == 1){
-        printf("IS PIPING");
-    }
-     if (strcmp(argv[0], "cd") == 0)
+    // int _piping = isPiping(argv);
+    // printf("IS PIPING %d", _piping);
+    // sleep(1);
+
+    // Change Directory
+    if (strcmp(argv[0], "cd") == 0)
     {
-        
+
         if (chdir(argv[1]) == -1)
         {
             perror("");
         }
     }
- 
-   
-        
-    else{
-         execvp(argv[0], argv);
-         if(argv[2] != NULL && strcmp(argv[2], ">") == 0){
-            printf("True");
-            char* na [3];
-            na[0] = argv[0];
-            na[1] = argv[1];
-            na[2] = NULL;
-            redirect(na);
-
-        }
-       
-        printf("False");
-        
-       
-        
-         
+    else
+    {
+        execvp(argv[0], argv);
     }
-    
+
+    // if (argv[2] != NULL && *argv[2] == '>')
+    // {
+    //     printf("True");
+    //     char *na[3];
+    //     na[0] = argv[0];
+    //     na[1] = argv[1];
+    //     na[2] = NULL;
+    //     redirect(na);
+    // }
+
+    // if (*argv[2] == '>')
+    // {
+    //     printf("True");
+    //     char *na[3];
+    //     na[0] = argv[0];
+    //     na[1] = argv[1];
+    //     na[2] = NULL;
+    //     // execv(argv[0], na);
+    //     execve(argv[0],na,environ);
+    //     redirect(na);
+    // }
+
     return 1;
 }
-int isPiping(char **str){
-    while(**str != '\0'){
-        if(**str == '>'){
+int isPiping(char **str)
+{
+    char **strPtr = str;
+    while (**strPtr != '\0')
+    {
+        if (**strPtr == '>')
+        {
+            perror("The piper is comming!");
             return 1;
         }
-        str = str + 1;
+        strPtr = strPtr + 1;
     }
     return 0;
 }
@@ -77,11 +88,11 @@ void sig_handler(int signo)
     // print_prompt();
 }
 
-void redirect(char ** argv)
+void redirect(char **argv)
 {
     printf("REDIRECTING");
-    char * new_args[3];
-    
+    char *new_args[3];
+
     // new_args[0] = argv[0];
     // new_args[1] = argv[1];
     // new_args[2] = NULL;
