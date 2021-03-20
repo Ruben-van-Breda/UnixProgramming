@@ -1,1 +1,1 @@
-03/17/21@ REDIRECTING
+as > myout.txt
