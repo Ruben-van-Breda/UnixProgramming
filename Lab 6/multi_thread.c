@@ -12,6 +12,7 @@ void *TaskCode(void *argument) {
 	/* optionally: insert more useful stuff here */
 	return NULL;
 }
+
 int main(void) {
 	pthread_t threads[NUMTHREADS]; 
 	int thread_args[NUMTHREADS]; 
