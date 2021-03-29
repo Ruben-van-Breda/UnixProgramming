@@ -48,23 +48,22 @@ int execute_command(char **argv, char **environ)
         
     }
 
-        // execvp(argv[0], argv);
-
-        if (strcmp(argv[2], ">") == 0)
-        {
-            // printf("True");
-            char *na[3];
-            na[0] = argv[0];
-            na[1] = argv[1];
-            na[2] = NULL;
-            // execvp(argv[0], na);
-            redirect(argv);
-        }
+        // // execvp(argv[0], argv);
+        // if (strcmp(argv[2], ">") == 0)
+        // {
+        //     // printf("True");
+        //     char *na[3];
+        //     na[0] = argv[0];
+        //     na[1] = argv[1];
+        //     na[2] = NULL;
+        //     // execvp(argv[0], na);
+        //     redirect(argv);
+        // }
         else
         {
             execvp(argv[0], argv);
         }
-        printf("False");
+     
     
     return 1;
 }
@@ -105,7 +104,7 @@ void sig_handler(int signo)
 
 void redirect(char **argv)
 {
-    // printf("REDIRECTING");
+    // perror("REDIRECTING");
     // char * new_args[3];
 
     // new_args[0] = argv[0];
@@ -118,22 +117,24 @@ void redirect(char **argv)
     char **out = malloc(8 * sizeof(char *));
     
     
-     while (str != NULL)
-    {
-        out[count] = str;
-        count++;
-        out = realloc(out, (count + 1) * sizeof(char *));
-        str = strtok(NULL, " ");
-    }
-    
-    const char *filename = out[1];
-    if (filename)
-    {
-        int fd = open(filename, O_CREAT | O_TRUNC | O_WRONLY, 0666);
-     
-        dup2(fd, 1); 
-
+    // while (str != NULL)
+    // {
+    //     out[count] = str;
+    //     count++;
+    //     out = realloc(out, (count + 1) * sizeof(char *));
+    //     str = strtok(NULL, " ");
+    // }
+ 
+    const char *filename = argv[3];
+    // if (filename)
+    // {
+        int fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC  , 0640);
+        //take the value in fd and output it to stdout
+        dup2(fd, 1); // Check `man stdin` for more info
+        // dup2(fd, STDERR_FILENO);
+        // Check the return values of dup2 here
+        argv[2] = NULL;
         close(fd);
-    }
+    // }
     return;
 }

@@ -69,8 +69,19 @@ char** get_command(char *com)
 
 int run_command(char **argv, char **environ)
 {
+      // execvp(argv[0], argv);
+        if (strcmp(argv[2], ">") == 0)
+        {
+            // printf("True");
+            char *na[3];
+            na[0] = argv[0];
+            na[1] = argv[1];
+            na[2] = NULL;
+            // execvp(argv[0], na);
+            redirect(argv);
+            return 1;
+        }
     
-  
     child_pid = fork();
 
     if (child_pid == 0)
