@@ -229,8 +229,7 @@ void odd_even(int p)
     // has file argument
     fp = fopen(optarg, "r");
    
-    // has file argument
-    fp = fopen(optarg, "r");
+  
     counter = 0;
     if (fp != NULL)
     {
