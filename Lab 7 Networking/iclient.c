@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     hints.ai_family = AF_UNSPEC; 
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_NUMERICSERV;
-
+      // Get an available address
     if (getaddrinfo(argv[1], PORTNUM, &hints, &result) != 0)
        exit(-1);
 
@@ -52,21 +52,21 @@ int main(int argc, char *argv[])
        fprintf(stderr, "No socket to bind...\n");
        exit(-1);
     }
-
-    freeaddrinfo(result);
+   // free the list generated in the getaddrinfo call
+    freeaddrinfo(result); 
 
     {
         char buf[BUFSIZE];
-        char msg[] = "Hello World!";
-        int c;
+        char msg[] = "Hello World!"; // message
+        int c; // counter
         srand(time(NULL));
-        for (c = 0; c < BUFSIZE-1; c++)
+        for (c = 0; c < BUFSIZE-1; c++) // populate buffer with desired data
         {
          //   buf[c] = 'A' + (random() % 26);
            if(c < strlen(msg))
             buf[c] = msg[c];
         }
-        buf[BUFSIZE-1] = '\0';
+        buf[BUFSIZE-1] = '\0'; // add a end of line character
 
         printf("Sending %s to localhost:%s\n",buf, PORTNUM);
 
