@@ -6,13 +6,17 @@
 
 float** getMatrix();
 float** create2DArray(int n, int m);
+
+float** createA();
+float** createB();
+
 void displayMatrix(float **matrix);
 float** multiplyMatrix(float ** A,float ** B);
 
 
 int main(){
-    float** A = getMatrix();
-    float** B = getMatrix();
+    float** A = createA();
+    float** B = createB();
     displayMatrix(A);
     displayMatrix(B);
     float** C = multiplyMatrix(A,B);
@@ -43,6 +47,23 @@ float** getMatrix(){
 
 }
 
+float** createA(){
+    float** M = create2DArray(2,2);
+    M[0][0] = 0;
+    M[0][1] = 2;
+    M[1][0] = 3;
+    M[1][1] = 4;
+    return M;
+}
+float** createB(){
+    float** M = create2DArray(2,2);
+    M[0][0] = 1;
+    M[0][1] = 2;
+    M[1][0] = 3;
+    M[1][1] = 4;
+    return M;
+}
+
 float** create2DArray(int m, int n)
 {
     float* values = calloc(m*n, sizeof(float));
@@ -68,6 +89,7 @@ void displayMatrix(float **matrix){
         }
         printf("\n");
     }
+    printf("\n");
 }
 
 float** multiplyMatrix(float ** A,float ** B){
@@ -96,4 +118,8 @@ float** multiplyMatrix(float ** A,float ** B){
 
 
     return C;
+}
+
+float** REFF (float **matrix){
+    return NULL;
 }
