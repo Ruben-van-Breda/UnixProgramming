@@ -7,6 +7,9 @@
 float** getMatrix();
 float** create2DArray(int n, int m);
 
+/* Headers */
+
+/* Easy debugging */
 float** createA();
 float** createB();
 
@@ -15,21 +18,10 @@ float** multiplyMatrix(float ** A,float ** B);
 float** REFF (float **matrix);
 int det(float **matric,int rStart,int cStart);
 
-
-
-// int main(){
-//     float** A = createA();
-//     float** B = createB();
-//     displayMatrix(A);
-//     // det(A,3,3);
-//     displayMatrix(B);
-//     float** C = multiplyMatrix(A,B);
-//     displayMatrix(C);
-
-//     // REFF(C);
-//     return 0;   
-// }
-
+/**
+ *  Get the user to enter a matrix 
+ *  @return user populated matrix
+ */
 float** getMatrix(){
     /* Get dimensions */
     int n; int m;
@@ -71,6 +63,12 @@ float** createB(){
     return M;
 }
 
+/**
+ * Allocate memory for a two dimensional array of type float
+ * @param m row size of matrix 
+ * @param n column size of matrix
+ * @return memory allocated array
+ */
 float** create2DArray(int m, int n)
 {
     float* values = calloc(m*n, sizeof(float));
@@ -105,6 +103,12 @@ void displayMatrix(float **matrix){
     // printf("n=%d m=%d\n",row_len,col_len);
 }
 
+/**
+ * Multiply matrices A and B
+ * @param A first matrix
+ * @param B second matrix
+ * @return C the resultent matrix of A and B
+ */
 float** multiplyMatrix(float ** A,float ** B){
 
     // Calculate dimensions
