@@ -1,15 +1,25 @@
 #include "A3.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include "Matrix.c"
-#include <assert.h>
-#define NUMTHREADS 1
+
+int N = 2; // default value is 2
+int numOfWorkers = 1;
+
 int main(){
-    float** A = getMatrix(); 
-    float** B = getMatrix(); 
+
+	// Get size of matrices
+	printf("Enter size of n: ");
+	scanf("%d",&N);
+
+
+    float** A = createA(); 
+    float** B = createB(); 
 
     printf("\nMatrix A:\n");
+	for(int r = 0 ; r < 3; r ++){
+		for(int c = 0; c < 3; c++){
+			printf("%.02f ",A[r][c]);
+		}
+		printf("\n");
+	}
     displayMatrix(A);
     printf("\nMatrix B:\n");
     displayMatrix(B);
@@ -39,5 +49,5 @@ void createThread(){
 }
 
 void * ThreadFunc(void *argument){
-
+    
 }
