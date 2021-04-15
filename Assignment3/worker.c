@@ -1,11 +1,17 @@
 
 #include "StandardNetwork.c"
 
+char mybuf[BUFSIZE];
+
 int main(int argc, char *argv[])
-{
+{   
+   
     int socket_fd = ConnectToSocketAsClient();
-    ClientSend(socket_fd);
-    ClientRecieve(socket_fd);
+    char *msg = "Computing A";
+    ClientSend(socket_fd,msg);
+
+    *mybuf = ClientRecieve(socket_fd);
+    printf("Client Recieved %s",buf);
 
     if (close(socket_fd) == -1) /* Close connection */
     {

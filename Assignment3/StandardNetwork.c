@@ -14,8 +14,8 @@
 #define BACKLOG 10
 #define BUFSIZE 32
 char buf[BUFSIZE];
-void SetUp(){
-
+void SetUp()
+{
 }
 void ServerReceive(int client_fd, char buf[BUFSIZE]);
 
@@ -200,9 +200,10 @@ void ServerReceive(int file_descriptor, char buf[BUFSIZE])
    printf("Received %s\n", buf);
 }
 
-void ClientSend(int socket_fd){
-   char msg[] = "Hello World!"; // message
-   int c;                       // counter
+void ClientSend(int socket_fd, char msg[])
+{
+
+   int c; // counter
    srand(time(NULL));
    for (c = 0; c < BUFSIZE - 1; c++) // populate buffer with desired data
    {
@@ -234,25 +235,27 @@ void ClientSend(int socket_fd){
    }
 }
 
-void ClientRecieve(int socket_fd){
+char* ClientRecieve(int socket_fd)
+{
    size_t totRead;
-    char *bufr = buf;
-    for (totRead = 0; totRead < BUFSIZE;)
-    {
-        ssize_t numRead = read(socket_fd, bufr, BUFSIZE - totRead);
-        if (numRead == 0)
-            break;
-        if (numRead == -1)
-        {
-            if (errno == EINTR)
-                continue;
-            else
-            {
-                fprintf(stderr, "Read error.\n");
-            }
-        }
-        totRead += numRead;
-        bufr += numRead;
-    }
-    printf("Received %s\n", buf);
+   char *bufr = buf;
+   for (totRead = 0; totRead < BUFSIZE;)
+   {
+      ssize_t numRead = read(socket_fd, bufr, BUFSIZE - totRead);
+      if (numRead == 0)
+         break;
+      if (numRead == -1)
+      {
+         if (errno == EINTR)
+            continue;
+         else
+         {
+            fprintf(stderr, "Read error.\n");
+         }
+      }
+      totRead += numRead;
+      bufr += numRead;
+   }
+   // printf("Received %s\n", buf);
+   return buf;
 }
