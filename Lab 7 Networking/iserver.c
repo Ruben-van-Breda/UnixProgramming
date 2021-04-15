@@ -31,23 +31,23 @@ int main(int argc, char *argv[])
     if (getaddrinfo(NULL, PORTNUM, &hints, &result) != 0)
        exit(-1);
 
-    int lfd, optval = 1;
+    int mysocket, optval = 1;
     for (rp = result; rp != NULL; rp = rp->ai_next) {
-         lfd = socket(rp->ai_family, rp->ai_socktype, 
+         mysocket = socket(rp->ai_family, rp->ai_socktype, 
                       rp->ai_protocol);
 
-         if (lfd == -1)
+         if (mysocket == -1)
             continue;   /* On error, try next address */
 
-         if (setsockopt(lfd, SOL_SOCKET, SO_REUSEADDR, 
+         if (setsockopt(mysocket, SOL_SOCKET, SO_REUSEADDR, 
                         &optval, sizeof(optval)) == -1)
             exit(-1);
 
-         if (bind(lfd, rp->ai_addr, rp->ai_addrlen) == 0)
+         if (bind(mysocket, rp->ai_addr, rp->ai_addrlen) == 0)
             break; /* Success */
 
          /* bind() failed, close this socket, try next address */
-         close(lfd);
+         close(mysocket);
     }
 
     if (rp == NULL)
@@ -65,14 +65,14 @@ int main(int argc, char *argv[])
 
     freeaddrinfo(result);
 
-    if (listen(lfd, BACKLOG) == -1)
+    if (listen(mysocket, BACKLOG) == -1)
        exit(-1);
 
     for (;;) /* Handle clients iteratively */
     {
         struct sockaddr_storage claddr;
         socklen_t addrlen = sizeof(struct sockaddr_storage);
-        int cfd = accept(lfd, (struct sockaddr *)&claddr, &addrlen);
+        int cfd = accept(mysocket, (struct sockaddr *)&claddr, &addrlen);
         if (cfd == -1) {
            continue;   /* Print an error message */
         }

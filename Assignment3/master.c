@@ -17,4 +17,9 @@ int main(){
 
     float** C = multiplyMatrix(A,B,N);
     displayMatrix(C,N);
+
+    int socketID = ConnectToAsServerSocket();
+    printf("\n%d",socketID);
+
+    SeverActive(socketID);
 }
