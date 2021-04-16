@@ -95,12 +95,12 @@ SomeMatrix createB(int N)
         res.array[0][0] = 1;
         res.array[0][1] = 2;
         res.array[0][2] = 3;
-        res.array[1][0] = 1;
-        res.array[1][1] = 2;
-        res.array[1][2] = 1;
-        res.array[2][0] = 3;
-        res.array[2][1] = 1;
-        res.array[2][2] = 2;
+        res.array[1][0] = 0;
+        res.array[1][1] = 1;
+        res.array[1][2] = 5;
+        res.array[2][0] = 1;
+        res.array[2][1] = 0;
+        res.array[2][2] = 3;
     }
     if (N == 2)
     {
@@ -156,19 +156,6 @@ void displayMatrix(SomeMatrix matrix)
  */
 SomeMatrix multiplyMatrix(SomeMatrix A, SomeMatrix B)
 {
-
-    // Calculate dimensions
-    // int rowA_len = sizeof(A) / sizeof(A[0][0]);
-    // int colA_len = sizeof(A[0]) /sizeof(A[0][0]);
-
-    // int rowB_len = sizeof(B) / sizeof(B[0][0]);
-    // int colB_len = sizeof(B[0]) /sizeof(B[0][0]);
-
-    // Invalid Dimensions
-    // if(colA_len != rowB_len){
-    //     perror("Invalid dimentions for the matrices to multiply\n");
-    //     return NULL;
-    // }
 
     // Create resultent matrix
     SomeMatrix product;
