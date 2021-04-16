@@ -16,16 +16,11 @@ struct MatrixObject
 SomeMatrix getMatrix();
 float **create2DArray(int n, int m);
 
-/* Headers */
-
-/* Easy debugging */
+/* Function Headers */
 SomeMatrix createA(int N);
 SomeMatrix createB(int N);
-
-void displayMatrix(SomeMatrix matrix);
 SomeMatrix multiplyMatrix(SomeMatrix A, SomeMatrix B);
-float **REFF(float **matrix);
-int det(float **matric, int rStart, int cStart);
+void displayMatrix(SomeMatrix matrix);
 
 /* Methods */
 
@@ -142,19 +137,6 @@ float **create2DArray(int m, int n)
  */
 void displayMatrix(SomeMatrix matrix)
 {
-    /** 
-     * @todo The dimensions might not be calculated correctly 
-     */
-    // Calculate dimensions
-    // int row_len = sizeof(matrix[0])/sizeof(float);
-    // int col_len = sizeof(matrix[0]) /sizeof(float) - 1;
-
-    // printf("sizeof(matrix) = %d\n",sizeof(matrix));
-    // printf("sizeof(matrix[0][0]) = %d\n",sizeof(matrix[0][0]));
-    // printf("sizeof(matrix) / sizeof(matrix[0][0]) = %d\n",sizeof(matrix)/sizeof(matrix[0][0]));
-    // printf("row lasen %d,  col len %d",row_len,col_len);
-    /* loop through and print matrix */
-
     for (int r = 0; r < matrix.rows; r++)
     {
         for (int c = 0; c < matrix.cols; c++)
@@ -211,30 +193,37 @@ SomeMatrix multiplyMatrix(SomeMatrix A, SomeMatrix B)
 
     return product;
 }
-SomeMatrix MultiplyByRows(SomeMatrix slice, SomeMatrix B, int index)
-{   
-    SomeMatrix product;
-    product.rows = 1;
-    product.cols = B.size;
-    int sum = 0;
+SomeMatrix MultiplyBySlice(SomeMatrix slice, SomeMatrix M, int index)
+{
+    SomeMatrix vector;
+    vector.array = create2DArray(1,M.cols);
+    vector.size = M.size;
+    vector.rows = 1;
+    vector.cols = M.cols;
+    float sum = 0;
     /* Multiply Matrices */
-    for (int r = 0; r < slice.rows; r++)
+    for (int r = 0; r < M.rows; r++)
     {
-       
-            // inside loop for index
-            for (int i = 0; i < B.cols; i++)
+             // inside loop for index
+            for (int i = 0; i < M.size; i++)
             {
-                sum += slice.array[r][i] * B.array[i][index];
+                printf("%.0f , %.0f\n", slice.array[0][i],M.array[i][r]);
+                sum += slice.array[0][i] * M.array[i][r];
             }
-            product.array[r][index] = sum;
+
+            vector.array[0][r] = sum;
+            printf("vector sum = %.0f\n",vector.array[0][r]);
             sum = 0;
         
+        
     }
-    return product;
+
+    return vector;
 }
 
 SomeMatrix GetSlice(int sliceIndex, SomeMatrix m)
 {
+    /*  Get the row of matrix m at index of sliceIndex*/
     SomeMatrix res;
     res.size = m.size;
     res.array = create2DArray(1, m.size);
@@ -248,4 +237,3 @@ SomeMatrix GetSlice(int sliceIndex, SomeMatrix m)
 
     return res;
 }
-

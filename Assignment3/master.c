@@ -6,24 +6,27 @@ void DebugCode();
 int N = 3; // size of the matrices
 int p = 1; // number Of Worker Threads
 
+void MyServerRecieve(int fd, char buf[BUFSIZE]);
+void breakIntoSlices(SomeMatrix A, SomeMatrix B);
+
 int main()
 {
     /* printf("\n--- Master --- \n");
     printf("Enter size of matrices n: ");
     scanf("%d",&N);
 
-    float** A = createA(N);
-    displayMatrix(A,N);
+    SomeMatrix A = createA(N);
+    displayMatrix(A);
 
-    float** B = createB(N);
-    displayMatrix(B,N);
+    // float** B = createB(N);
+    // displayMatrix(B,N);
 
-    float** C = multiplyMatrix(A,B,N);
-    displayMatrix(C,N);
+    // float** C = multiplyMatrix(A,B,N);
+    // displayMatrix(C,N);
 
     int socketID = ConnectToAsServerSocket();
     printf("\n%d",socketID);
-
+    ServerRecieveFunc = MyServerRecieve;
     SeverActive(socketID); */
     DebugCode();
 }
@@ -32,10 +35,31 @@ void DebugCode()
 {
     SomeMatrix A = createA(N);
     displayMatrix(A);
+    SomeMatrix B = createB(N);
+    displayMatrix(B);
 
-    SomeMatrix slice = GetSlice(0, A);
-    displayMatrix(slice);
+    breakIntoSlices(A,B);
+   
+    
+}
+void breakIntoSlices(SomeMatrix A, SomeMatrix B){
+    /* Each slice has n/p rows*/
+    SomeMatrix C;
+    SomeMatrix slice;
+    
 
-    // SomeMatrix p1 = MultiplyByRows(slice,A,0);
-    // displayMatrix(p1);
+    for(int k = 0; k < A.cols; k++){
+   
+        slice = GetSlice(k, A);
+        printf("slice \t");
+        displayMatrix(slice);
+        SomeMatrix vector = MultiplyBySlice(slice, B,k);
+        displayMatrix(vector);
+    }
+    
+}
+
+/* Impelement a send functon for the server host */
+void MyServerRecieve(int fd, char buf[BUFSIZE]) { 
+    printf("My Custom Server Send Function");
 }

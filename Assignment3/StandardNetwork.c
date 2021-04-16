@@ -17,6 +17,11 @@ char buf[BUFSIZE];
 void SetUp()
 {
 }
+
+// Pointer functions 
+void (*ServerRecieveFunc) (int file_descriptor, char buf[BUFSIZE]);
+void (*ServerSendFunc) (int file_descriptor, char buf[BUFSIZE]);
+
 void ServerReceive(int client_fd, char buf[BUFSIZE]);
 
 /**
@@ -145,7 +150,8 @@ int SeverActive(int mysocket)
       }
 
       char buf[BUFSIZE];
-      ServerReceive(client_file_descriptor, buf);
+      ServerRecieveFunc = ServerRecieveFunc == NULL? ServerReceive: ServerRecieveFunc;
+      ServerRecieveFunc(client_file_descriptor, buf);
 
       size_t totWritten;
       const char *bufw = buf;
