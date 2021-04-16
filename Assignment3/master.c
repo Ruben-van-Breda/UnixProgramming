@@ -32,21 +32,10 @@ void DebugCode()
 {
     SomeMatrix A = createA(N);
     displayMatrix(A);
-    printf("Address \n");
-    for (int i = 0; i < A.size; i++)
-    {
-
-        for (int j = 0; j < A.size; j++)
-        {
-            printf("%p ", &A.array[i][j]);
-        }
-        printf("\n");
-    }
 
     SomeMatrix slice = GetSlice(0, A);
     displayMatrix(slice);
-    SomeMatrix slice2 = GetSlice(1, A);
-    displayMatrix(slice2);
-    SomeMatrix slice3 = GetSlice(2, A);
-    displayMatrix(slice3);
+
+    // SomeMatrix p1 = MultiplyByRows(slice,A,0);
+    // displayMatrix(p1);
 }
