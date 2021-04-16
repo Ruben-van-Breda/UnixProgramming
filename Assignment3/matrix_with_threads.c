@@ -3,7 +3,7 @@
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <assert.h>
-#define NUMTHREADS 2
+#define NUMTHREADS 3
 
 void *TaskCode(void *argument);
 
@@ -39,8 +39,15 @@ void *printMatrix(void* argument){
     return NULL;
 }
 void *Multiply(void* argument){
-    SomeMatrix M = *((SomeMatrix *)argument);
-    displayMatrix(M);
+    // Block
+    pthread_mutex_lock (&mutexsum);
+    int arg = *((int *)argument);
+    SomeMatrix slice = GetSlice(arg, A);
+    SomeMatrix vector = MultiplyBySlice(slice,B,arg);
+    C.array[arg] = *vector.array;
+    displayMatrix(vector);
+    pthread_mutex_unlock (&mutexsum);
+    pthread_exit((void*) 0);
     return NULL;
 }
 
@@ -48,11 +55,15 @@ int main(){
 
     A = createA(3);
     B = createB(3);
-    
+    C.array = create2DArray(3,3);
+    C.size = 3;
+    C.rows = C.cols = 3;
 
     /* Threads */
     pthread_t threads[NUMTHREADS]; 
     int thread_args[NUMTHREADS];
+
+    pthread_mutex_init(&mutexsum, NULL);
     // thread_args[0] = A;
     // thread_args[1] = B;
 
@@ -60,7 +71,7 @@ int main(){
     for(int i = 0; i < NUMTHREADS; i++){
         thread_args[i] = i;
         printf("In main: creating thread %d\n", i);
-        rc = pthread_create(&threads [ i ] , NULL, printMatrix , (void *)&thread_args[i]);
+        rc = pthread_create(&threads [ i ] , NULL, Multiply , (void *)&thread_args[i]);
         assert(rc == 0); // assert that the pthread creation was successful
        
     }
@@ -71,7 +82,9 @@ int main(){
 		assert(0 == rc);
 	}
     printf("In main: x = %d\n", x);
-
+    displayMatrix(C);
+    free (A.array); free (B.array);
+    pthread_mutex_destroy(&mutexsum);
     return EXIT_SUCCESS;
 }
 

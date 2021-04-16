@@ -194,12 +194,12 @@ SomeMatrix MultiplyBySlice(SomeMatrix slice, SomeMatrix M, int index)
              // inside loop for index
             for (int i = 0; i < M.size; i++)
             {
-                printf("%.0f , %.0f\n", slice.array[0][i],M.array[i][r]);
+                // printf("%.0f , %.0f\n", slice.array[0][i],M.array[i][r]);
                 sum += slice.array[0][i] * M.array[i][r];
             }
 
             vector.array[0][r] = sum;
-            printf("vector sum = %.0f\n",vector.array[0][r]);
+            // printf("vector sum = %.0f\n",vector.array[0][r]);
             sum = 0;
         
         
