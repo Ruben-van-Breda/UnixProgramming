@@ -8,8 +8,7 @@ sem_t S;
 
 void* thread1(void* arg)
 {
-    //wait
-    sem_wait(&S);
+  
     printf("\nP1 Entered..\n");
   
     //critical section
@@ -40,7 +39,7 @@ int main(){
     pthread_t t1,t2,t3,t4;
     pthread_create(&t1,NULL,thread1,NULL);
     // sleep(2);
-    pthread_create(&t2,NULL,thread1,NULL);
+    pthread_create(&t2,NULL,thread2,NULL);
     pthread_join(t1,NULL);
     pthread_join(t2,NULL);
     sem_destroy(&S);
