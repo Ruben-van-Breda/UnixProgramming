@@ -18,12 +18,20 @@ void SetUp()
 {
 }
 
-// Pointer functions 
-void (*ServerRecieveFunc) (int file_descriptor, char buf[BUFSIZE]);
-void (*ServerSendFunc) (int file_descriptor, char buf[BUFSIZE]);
+// Pointer functions
+void (*ServerRecieveFunc)(int file_descriptor, char buf[BUFSIZE]);
+void (*ServerSendFunc)(int file_descriptor, char buf[BUFSIZE]);
 
 void ServerReceive(int client_fd, char buf[BUFSIZE]);
 
+
+void GetAvailableAddressesPassive(struct addrinfo hints, struct addrinfo *result)
+{
+   // assert(*(void )hints != NULL);
+   // Get an available address
+   if (getaddrinfo(NULL, PORTNUM, &hints, &result) != 0)
+      exit(-1);
+}
 /**
  * return socket id 
  */
@@ -96,10 +104,11 @@ int ConnectToSocketAsClient()
    hints.ai_family = AF_UNSPEC;
    hints.ai_socktype = SOCK_STREAM;
    hints.ai_flags = AI_NUMERICSERV;
-   // Get an available address
-   // argv[1] = null
-   if (getaddrinfo(NULL, PORTNUM, &hints, &result) != 0)
-      exit(-1);
+
+   GetAvailableAddressesPassive(hints, result);
+   // // Get an available address
+   // if (getaddrinfo(NULL, PORTNUM, &hints, &result) != 0)
+   //    exit(-1);
 
    int client_file_descriptor;
    for (rp = result; rp != NULL; rp = rp->ai_next)
@@ -138,7 +147,7 @@ int SeverActive(int mysocket)
       {
          continue; /* Print an error message */
       }
-
+      /* Get Connection to host */
       {
          char host[NI_MAXHOST];
          char service[NI_MAXSERV];
@@ -149,10 +158,12 @@ int SeverActive(int mysocket)
             fprintf(stderr, "Connection from (?UNKNOWN?)");
       }
 
+      /* Server Recieves */
       char buf[BUFSIZE];
-      ServerRecieveFunc = ServerRecieveFunc == NULL? ServerReceive: ServerRecieveFunc;
+      ServerRecieveFunc = ServerRecieveFunc == NULL ? ServerReceive : ServerRecieveFunc;
       ServerRecieveFunc(client_file_descriptor, buf);
 
+      /* Server Writes / ServerSend */
       size_t totWritten;
       const char *bufw = buf;
       for (totWritten = 0; totWritten < BUFSIZE;)
@@ -241,7 +252,7 @@ void ClientSend(int socket_fd, char msg[])
    }
 }
 
-char* ClientRecieve(int socket_fd)
+char *ClientRecieve(int socket_fd)
 {
    size_t totRead;
    char *bufr = buf;

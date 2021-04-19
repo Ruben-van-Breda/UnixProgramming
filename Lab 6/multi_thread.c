@@ -20,7 +20,7 @@ int main(void) {
 	/* create all threads */
 	for (i=0; i<NUMTHREADS; ++i) {
 		thread_args[i] = i;
-		
+		printf("In main: creating thread %d\n", i);
 		rc = pthread_create(&threads [ i ] , NULL, TaskCode , (void *)&thread_args[i]);
         assert(0 == rc);
 	}
