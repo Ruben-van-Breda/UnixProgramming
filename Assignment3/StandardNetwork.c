@@ -23,7 +23,7 @@ void (*ServerRecieveFunc)(int file_descriptor, char buf[BUFSIZE]);
 void (*ServerSendFunc)(int file_descriptor, char buf[BUFSIZE]);
 
 void ServerReceive(int client_fd, char buf[BUFSIZE]);
-
+void ServerSend(int client_fd, char buf[BUFSIZE]);
 
 void GetAvailableAddressesPassive(struct addrinfo hints, struct addrinfo *result)
 {
@@ -105,10 +105,10 @@ int ConnectToSocketAsClient()
    hints.ai_socktype = SOCK_STREAM;
    hints.ai_flags = AI_NUMERICSERV;
 
-   GetAvailableAddressesPassive(hints, result);
-   // // Get an available address
-   // if (getaddrinfo(NULL, PORTNUM, &hints, &result) != 0)
-   //    exit(-1);
+   // GetAvailableAddressesPassive(hints, result);
+   // Get an available address
+   if (getaddrinfo(NULL, PORTNUM, &hints, &result) != 0)
+      exit(-1);
 
    int client_file_descriptor;
    for (rp = result; rp != NULL; rp = rp->ai_next)
@@ -164,24 +164,27 @@ int SeverActive(int mysocket)
       ServerRecieveFunc(client_file_descriptor, buf);
 
       /* Server Writes / ServerSend */
-      size_t totWritten;
-      const char *bufw = buf;
-      for (totWritten = 0; totWritten < BUFSIZE;)
-      {
-         ssize_t numWritten = write(client_file_descriptor, bufw, BUFSIZE - totWritten);
-         if (numWritten <= 0)
-         {
-            if (numWritten == -1 && errno == EINTR)
-               continue;
-            else
-            {
-               fprintf(stderr, "Write error.\n");
-               exit(EXIT_FAILURE);
-            }
-         }
-         totWritten += numWritten;
-         bufw += numWritten;
-      }
+      ServerSendFunc = ServerSendFunc == NULL ? ServerSend : ServerSendFunc;
+      ServerSendFunc(client_file_descriptor, buf);
+      // /* Server Writes / ServerSend */
+      // size_t totWritten;
+      // const char *bufw = buf;
+      // for (totWritten = 0; totWritten < BUFSIZE;)
+      // {
+      //    ssize_t numWritten = write(client_file_descriptor, bufw, BUFSIZE - totWritten);
+      //    if (numWritten <= 0)
+      //    {
+      //       if (numWritten == -1 && errno == EINTR)
+      //          continue;
+      //       else
+      //       {
+      //          fprintf(stderr, "Write error.\n");
+      //          exit(EXIT_FAILURE);
+      //       }
+      //    }
+      //    totWritten += numWritten;
+      //    bufw += numWritten;
+      // }
 
       if (close(client_file_descriptor) == -1) /* Close connection */
       {
@@ -214,9 +217,12 @@ void ServerReceive(int file_descriptor, char buf[BUFSIZE])
       totRead += numRead;
       bufr += numRead;
    }
-   printf("Received %s\n", buf);
+   printf("Server Received %s\n", buf);
 }
 
+void ServerSend(int file_descriptor, char buf[BUFSIZE]){
+   printf("TODO: Impelment server send logic");
+}
 void ClientSend(int socket_fd, char msg[])
 {
 
@@ -273,6 +279,6 @@ char *ClientRecieve(int socket_fd)
       totRead += numRead;
       bufr += numRead;
    }
-   // printf("Received %s\n", buf);
+   printf("Client Received %s\n", buf);
    return buf;
 }

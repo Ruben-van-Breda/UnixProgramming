@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     ClientSend(socket_fd,msg);
 
     *mybuf = ClientRecieve(socket_fd);
-    printf("Client Recieved %s",buf);
+    printf("Client Recieved: %s",buf);
 
     if (close(socket_fd) == -1) /* Close connection */
     {
@@ -21,3 +21,5 @@ int main(int argc, char *argv[])
 
     exit(EXIT_SUCCESS);
 }
+
+
