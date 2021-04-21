@@ -1,7 +1,7 @@
 
 #include "StandardNetwork.c"
 
-char mybuf[BUFSIZE];
+char* mybuf;;
 
 int main(int argc, char *argv[])
 {   
@@ -10,8 +10,9 @@ int main(int argc, char *argv[])
     char *msg = "Computing A";
     ClientSend(socket_fd,msg);
 
-    *mybuf = ClientRecieve(socket_fd);
-    printf("Client Recieved: %s",buf);
+    mybuf = ClientRecieve(socket_fd);
+   
+    printf("Client Recieved: %s",mybuf);
 
     if (close(socket_fd) == -1) /* Close connection */
     {

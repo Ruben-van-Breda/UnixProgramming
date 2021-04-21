@@ -221,7 +221,7 @@ void ServerReceive(int file_descriptor, char buf[BUFSIZE])
 }
 
 void ServerSend(int file_descriptor, char buf[BUFSIZE]){
-   printf("TODO: Impelment server send logic");
+   printf("TODO: Impelement server send logic");
 }
 void ClientSend(int socket_fd, char msg[])
 {

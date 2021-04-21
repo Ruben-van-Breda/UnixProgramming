@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #define MAX_ROW 10
 #define MAX_COL = 10
@@ -21,6 +22,8 @@ SomeMatrix createA(int N);
 SomeMatrix createB(int N);
 SomeMatrix multiplyMatrix(SomeMatrix A, SomeMatrix B);
 void displayMatrix(SomeMatrix matrix);
+char* SlicetoString(SomeMatrix M, int index);
+
 
 /* Methods */
 
@@ -223,4 +226,48 @@ SomeMatrix GetSlice(int sliceIndex, SomeMatrix m)
     }
 
     return res;
+}
+
+char* SlicetoString(SomeMatrix M, int index){
+    char *str = malloc(100*sizeof(char));
+    
+    for (int r = 0; r < M.rows; r++)
+    {
+        for (int c = 0; c < M.cols; c++)
+        {
+            *(str + r) = M.array[0][c] + '0';
+            printf("C:%c ",*(str + r));
+        }
+        // printf("\n");
+    }
+    // printf("\n");
+
+    return str;
+
+
+}
+/**
+ * Create a vector from string
+ */
+SomeMatrix StringToMatrix(char* vectorStr){
+    SomeMatrix ret;
+    ret.rows = 1;
+    
+    int array[MAX_ROW];
+    int c_count = 0;
+    while(*(vectorStr+c_count) != '\0'){
+        // printf("%c ",*(vectorStr+c_count));
+        char numChar = *(vectorStr+c_count);
+        array[c_count] = atoi(&numChar);
+        c_count++;
+    }
+
+    ret.array = create2DArray(1,c_count);
+    ret.cols = c_count;
+    for(int i = 0; i < ret.cols; i ++ ){
+        ret.array [0][i] = array[i];
+    }
+    return ret;
+
+
 }
