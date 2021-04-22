@@ -3,8 +3,8 @@
 #include <string.h>
 
 #define MAX_ROW 10
-#define MAX_COL = 10
-
+#define MAX_COL 10
+#define MAX_CHAR_LEN 32 
 struct MatrixObject
 {
     int size;
@@ -229,14 +229,14 @@ SomeMatrix GetSlice(int sliceIndex, SomeMatrix m)
 }
 
 char* SlicetoString(SomeMatrix M, int index){
-    char *str = malloc(100*sizeof(char));
+    char *str = calloc(MAX_CHAR_LEN,sizeof(char));
     
     for (int r = 0; r < M.rows; r++)
     {
         for (int c = 0; c < M.cols; c++)
         {
-            *(str + r) = M.array[0][c] + '0';
-            printf("C:%c ",*(str + r));
+            str[c] = M.array[0][c] + '0';
+            // printf("C:%c ",*(str + r));
         }
         // printf("\n");
     }

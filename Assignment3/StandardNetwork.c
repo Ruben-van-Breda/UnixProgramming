@@ -279,6 +279,6 @@ char *ClientRecieve(int socket_fd)
       totRead += numRead;
       bufr += numRead;
    }
-   printf("Client Received %s\n", buf);
+   printf("Client Received-> %s\n", buf);
    return buf;
 }

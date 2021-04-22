@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 
     mybuf = ClientRecieve(socket_fd);
    
-    printf("Client Recieved: %s",mybuf);
+    printf("\nClient Recieved: %s",mybuf);
 
     if (close(socket_fd) == -1) /* Close connection */
     {

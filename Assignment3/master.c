@@ -31,7 +31,7 @@ int main()
 
     int socketID = ConnectToAsServerSocket();
     printf("\n%d", socketID);
-    /* Set the StandardNetwork.ServerRecieveFunc pointer 
+    /* Set the StandardNetwork.ServerRecieveFunc pointer
     to point to the local MyServerRecieve */
     ServerRecieveFunc = MyServerRecieve;
     ServerSendFunc = MyServerSends;
@@ -43,20 +43,35 @@ void DebugCode()
 {
     SomeMatrix A = createA(N);
     // displayMatrix(A);
-    char* vectorStr = SlicetoString(A,0);
+    char *vectorStr = SlicetoString(A, 0);
     int i = 0;
-    while(*(vectorStr+i) != '\0'){
-        printf("%c ",*(vectorStr+i));
+    while (*(vectorStr + i) != '\0')
+    {
+        printf("String %c \t", *(vectorStr + i));
         i++;
     }
-    // SomeMatrix CSM = StringToMatrix(vectorStr);
-    // printf("\nConverted String: %d\n",CSM.cols);
-    // displayMatrix(CSM);
-    // printf("\ntoString: %s\n", toString(A));
-    // SomeMatrix B = createB(N);
-    // displayMatrix(B);
+    char msg[10];
+    // msg[0] = *(vectorStr+0);
 
-    // breakIntoSlices(A, B);
+    for (int i = 0; i < BUFSIZE; i++)
+    {
+        if (*(vectorStr + i) != '\0')
+        {
+            msg[i] = *(vectorStr + i);
+        }
+
+        printf("msg[%d] = %c\n", i, *(vectorStr + i));
+        
+    }
+
+// SomeMatrix CSM = StringToMatrix(vectorStr);
+// printf("\nConverted String: %d\n",CSM.cols);
+// displayMatrix(CSM);
+// printf("\ntoString: %s\n", toString(A));
+// SomeMatrix B = createB(N);
+// displayMatrix(B);
+
+// breakIntoSlices(A, B);
 }
 
 /**
@@ -100,6 +115,7 @@ void breakIntoSlices(SomeMatrix A, SomeMatrix B)
 void MyServerRecieve(int fd, char buf[BUFSIZE])
 {
     printf("My Custom Server Recieved Function:\n");
+
     size_t totRead;
     char *bufr = buf;
     for (totRead = 0; totRead < BUFSIZE;)
@@ -125,27 +141,42 @@ void MyServerRecieve(int fd, char buf[BUFSIZE])
 void MyServerSends(int client_file_descriptor, char buf[BUFSIZE])
 {
     /* Server Writes / ServerSend */
-    if(client_counter >= A.size) {printf("COMPLETED MATRIX.\n"); return;}
+    if (client_counter >= A.size)
+    {
+        printf("COMPLETED MATRIX.\n");
+        return;
+    }
     SomeMatrix slice = GetSlice(client_counter, A);
     printf("Server is partitioning ...");
+    bzero(buf, BUFSIZE);
+    char *vectorStr = SlicetoString(slice, client_counter);
+    printf("\nSlice is : %c\n", *(vectorStr));
+    int readCounter = 0;
 
-    char* vectorStr = SlicetoString(slice,client_counter);
-    printf("\nSlice is : %s\n",vectorStr);
-    printf("printing partition...\n");
+    // Populate buffer
+     for (int i = 0; i < BUFSIZE; i++)
+    {
+        if (*(vectorStr + i) != '\0')
+        {
+            buf[i] = *(vectorStr + i);
+        }
+
+        printf("msg[%d] = %c\n", i, *(vectorStr + i));
+        
+    }
+   
+    buf[BUFSIZE - 1] = '\0'; // add a end of line character
+
     displayMatrix(slice);
     // char _buf[BUFSIZE];
-    // for(int i = 0 ; i < slice.rows; i ++){
-    //     _buf[i] = i;//slice.array[0][i];
-    // }
-
 
     /* Network sending stuff */
     // char _buf[MAX_ROW] = SlicetoString(slice,client_counter);;
-    // char _buf2[BUFSIZE] = "0 1 0";
+    char _buf2[BUFSIZE] = "0 1 0";
     size_t totWritten;
-    
-    const char *bufw = vectorStr; //client_counter<1?_buf:_buf2;
-  
+
+    const char *bufw = buf; //client_counter<1?_buf:_buf2;
+
     for (totWritten = 0; totWritten < BUFSIZE;)
     {
         ssize_t numWritten = write(client_file_descriptor, bufw, BUFSIZE - totWritten);
