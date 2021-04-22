@@ -43,26 +43,26 @@ void DebugCode()
 {
     SomeMatrix A = createA(N);
     // displayMatrix(A);
-    char *vectorStr = SlicetoString(A, 0);
-    int i = 0;
-    while (*(vectorStr + i) != '\0')
-    {
-        printf("String %c \t", *(vectorStr + i));
-        i++;
-    }
-    char msg[10];
-    // msg[0] = *(vectorStr+0);
+    // char *vectorStr = SlicetoString(A, 0);
+    // int i = 0;
+    // while (*(vectorStr + i) != '\0')
+    // {
+    //     printf("String %c \t", *(vectorStr + i));
+    //     i++;
+    // }
+    // char msg[10];
+    // // msg[0] = *(vectorStr+0);
 
-    for (int i = 0; i < BUFSIZE; i++)
-    {
-        if (*(vectorStr + i) != '\0')
-        {
-            msg[i] = *(vectorStr + i);
-        }
+    // for (int i = 0; i < BUFSIZE; i++)
+    // {
+    //     if (*(vectorStr + i) != '\0')
+    //     {
+    //         msg[i] = *(vectorStr + i);
+    //     }
 
-        printf("msg[%d] = %c\n", i, *(vectorStr + i));
+    //     printf("msg[%d] = %c\n", i, *(vectorStr + i));
         
-    }
+    // }
 
 // SomeMatrix CSM = StringToMatrix(vectorStr);
 // printf("\nConverted String: %d\n",CSM.cols);
@@ -149,19 +149,28 @@ void MyServerSends(int client_file_descriptor, char buf[BUFSIZE])
     SomeMatrix slice = GetSlice(client_counter, A);
     printf("Server is partitioning ...");
     bzero(buf, BUFSIZE);
-    char *vectorStr = SlicetoString(slice, client_counter);
-    printf("\nSlice is : %c\n", *(vectorStr));
-    int readCounter = 0;
-
+    char vectorStr[MAX_ROW][MAX_CHAR_LEN];
+    SlicetoString(slice, client_counter,vectorStr);
+    printf("\nSlice is : %s\n", vectorStr[0]);
+    printf("\nSlice is : %s\n", vectorStr[1]);
+    printf("\nSlice is : %s\n", vectorStr[2]);
+    
+    char* finalStr = malloc(sizeof(char) * MAX_COL);
+    for(int n = 0; n < slice.cols; n++){
+        strcat(finalStr,vectorStr[n]);
+        strcat(finalStr," ");
+    }
+    
+    printf("\nVectorStr is : %s\n", finalStr);
     // Populate buffer
      for (int i = 0; i < BUFSIZE; i++)
     {
-        if (*(vectorStr + i) != '\0')
+        if (finalStr[i] != '\0')
         {
-            buf[i] = *(vectorStr + i);
+            buf[i] = finalStr[i];
         }
 
-        printf("msg[%d] = %c\n", i, *(vectorStr + i));
+        printf("msg[%d] = %c\n", i, finalStr[i]);
         
     }
    

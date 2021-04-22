@@ -4,7 +4,7 @@
 
 #define MAX_ROW 10
 #define MAX_COL 10
-#define MAX_CHAR_LEN 32 
+#define MAX_CHAR_LEN 32
 struct MatrixObject
 {
     int size;
@@ -22,7 +22,7 @@ SomeMatrix createA(int N);
 SomeMatrix createB(int N);
 SomeMatrix multiplyMatrix(SomeMatrix A, SomeMatrix B);
 void displayMatrix(SomeMatrix matrix);
-char* SlicetoString(SomeMatrix M, int index);
+void SlicetoString(SomeMatrix M, int index, char str[MAX_ROW][MAX_CHAR_LEN]);
 
 
 /* Methods */
@@ -66,7 +66,7 @@ SomeMatrix createA(int N)
     res.array = create2DArray(N, N);
     if (N == 3)
     {
-        res.array[0][0] = 1;
+        res.array[0][0] = 11;
         res.array[0][1] = 2;
         res.array[0][2] = 3;
         res.array[1][0] = 1;
@@ -186,7 +186,7 @@ SomeMatrix multiplyMatrix(SomeMatrix A, SomeMatrix B)
 SomeMatrix MultiplyBySlice(SomeMatrix slice, SomeMatrix M, int index)
 {
     SomeMatrix vector;
-    vector.array = create2DArray(1,M.cols);
+    vector.array = create2DArray(1, M.cols);
     vector.size = M.size;
     vector.rows = 1;
     vector.cols = M.cols;
@@ -194,18 +194,16 @@ SomeMatrix MultiplyBySlice(SomeMatrix slice, SomeMatrix M, int index)
     /* Multiply Matrices */
     for (int r = 0; r < M.rows; r++)
     {
-             // inside loop for index
-            for (int i = 0; i < M.size; i++)
-            {
-                // printf("%.0f , %.0f\n", slice.array[0][i],M.array[i][r]);
-                sum += slice.array[0][i] * M.array[i][r];
-            }
+        // inside loop for index
+        for (int i = 0; i < M.size; i++)
+        {
+            // printf("%.0f , %.0f\n", slice.array[0][i],M.array[i][r]);
+            sum += slice.array[0][i] * M.array[i][r];
+        }
 
-            vector.array[0][r] = sum;
-            // printf("vector sum = %.0f\n",vector.array[0][r]);
-            sum = 0;
-        
-        
+        vector.array[0][r] = sum;
+        // printf("vector sum = %.0f\n",vector.array[0][r]);
+        sum = 0;
     }
 
     return vector;
@@ -228,46 +226,54 @@ SomeMatrix GetSlice(int sliceIndex, SomeMatrix m)
     return res;
 }
 
-char* SlicetoString(SomeMatrix M, int index){
-    char *str = calloc(MAX_CHAR_LEN,sizeof(char));
-    
+void SlicetoString(SomeMatrix M, int index, char str[MAX_ROW][MAX_CHAR_LEN])
+{
+    // initialise the str //
+    for(int r = 0; r < MAX_ROW; r++){
+        for(int c = 0; c < MAX_CHAR_LEN; c++){
+            // printf("str init [%d][%d] = %c\n",r,c,str[r][c]);
+            str[r][c] = '\n';
+            //  printf("NEW str init [%d][%d] = %c\n",r,c,str[r][c]);
+        }
+    }
+    char buffer[32];
+    int spaceCounter = 1;
+    printf("\nSlicing...\n");
     for (int r = 0; r < M.rows; r++)
     {
         for (int c = 0; c < M.cols; c++)
         {
-            str[c] = M.array[0][c] + '0';
-            // printf("C:%c ",*(str + r));
+            // make sure to break numbers up into units
+            sprintf(str[c], "%.02f", M.array[0][c]);      
         }
-        // printf("\n");
+
     }
-    // printf("\n");
-
-    return str;
-
 
 }
 /**
  * Create a vector from string
  */
-SomeMatrix StringToMatrix(char* vectorStr){
+SomeMatrix StringToMatrix(char *vectorStr)
+{
     SomeMatrix ret;
     ret.rows = 1;
-    
+
     int array[MAX_ROW];
     int c_count = 0;
-    while(*(vectorStr+c_count) != '\0'){
+    while (*(vectorStr + c_count) != '\0')
+    {
         // printf("%c ",*(vectorStr+c_count));
-        char numChar = *(vectorStr+c_count);
+        char numChar = *(vectorStr + c_count);
         array[c_count] = atoi(&numChar);
         c_count++;
     }
 
-    ret.array = create2DArray(1,c_count);
+    /*  Populate our matrix array   */
+    ret.array = create2DArray(1, c_count);
     ret.cols = c_count;
-    for(int i = 0; i < ret.cols; i ++ ){
-        ret.array [0][i] = array[i];
+    for (int i = 0; i < ret.cols; i++)
+    {
+        ret.array[0][i] = array[i];
     }
     return ret;
-
-
 }
