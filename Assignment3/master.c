@@ -151,9 +151,7 @@ void MyServerSends(int client_file_descriptor, char buf[BUFSIZE])
     bzero(buf, BUFSIZE);
     char vectorStr[MAX_ROW][MAX_CHAR_LEN];
     SlicetoString(slice, client_counter,vectorStr);
-    printf("\nSlice is : %s\n", vectorStr[0]);
-    printf("\nSlice is : %s\n", vectorStr[1]);
-    printf("\nSlice is : %s\n", vectorStr[2]);
+    
     
     char* finalStr = malloc(sizeof(char) * MAX_COL);
     for(int n = 0; n < slice.cols; n++){
@@ -180,8 +178,6 @@ void MyServerSends(int client_file_descriptor, char buf[BUFSIZE])
     // char _buf[BUFSIZE];
 
     /* Network sending stuff */
-    // char _buf[MAX_ROW] = SlicetoString(slice,client_counter);;
-    char _buf2[BUFSIZE] = "0 1 0";
     size_t totWritten;
 
     const char *bufw = buf; //client_counter<1?_buf:_buf2;

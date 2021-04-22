@@ -253,21 +253,29 @@ void SlicetoString(SomeMatrix M, int index, char str[MAX_ROW][MAX_CHAR_LEN])
 /**
  * Create a vector from string
  */
-SomeMatrix StringToMatrix(char *vectorStr)
+SomeMatrix StringToMatrix(char vectorStr[MAX_CHAR_LEN])
 {
     SomeMatrix ret;
     ret.rows = 1;
-
-    int array[MAX_ROW];
+   
+    float array[MAX_ROW];
     int c_count = 0;
-    while (*(vectorStr + c_count) != '\0')
-    {
-        // printf("%c ",*(vectorStr+c_count));
-        char numChar = *(vectorStr + c_count);
-        array[c_count] = atoi(&numChar);
-        c_count++;
-    }
+    char** numbers[MAX_CHAR_LEN];
+    float values[strlen(vectorStr)];
 
+    printf("\nTRANSFORMING %s\n",vectorStr);
+
+    char* num = strtok(vectorStr, " ");
+    while(num != NULL){
+        numbers[c_count] = &num;
+        float value = atoi(*numbers[c_count]);
+        array[c_count] = value;
+        printf("numberStr : %s\t",*numbers[c_count]);
+        printf("value : %f\n",value);
+        c_count++;
+        num = strtok(NULL, " ");
+
+    }
     /*  Populate our matrix array   */
     ret.array = create2DArray(1, c_count);
     ret.cols = c_count;
