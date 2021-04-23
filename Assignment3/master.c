@@ -8,11 +8,8 @@ int p = 1; // number Of Worker Threads
 
 void MyServerRecieve(int fd, char buf[BUFSIZE]);
 void MyServerSends(int fd, char buf[BUFSIZE]);
-void breakIntoSlices(SomeMatrix A, SomeMatrix B);
+void breakIntoSlices(SomeMatrix a, SomeMatrix b);
 
-SomeMatrix A;
-SomeMatrix B;
-SomeMatrix C;
 int client_counter = 0;
 int main()
 {
@@ -26,6 +23,9 @@ int main()
     B = createB(N);
     displayMatrix(B);
 
+    C.array = create2DArray(3,3);
+    C.size = 3;
+    C.rows = C.cols = 3;
     // float** C = multiplyMatrix(A,B,N);
     // displayMatrix(C,N);
 
@@ -144,38 +144,63 @@ void MyServerSends(int client_file_descriptor, char buf[BUFSIZE])
     if (client_counter >= A.size)
     {
         printf("COMPLETED MATRIX.\n");
+        displayMatrix(C);
         return;
     }
     SomeMatrix slice = GetSlice(client_counter, A);
     printf("Server is partitioning ...");
     bzero(buf, BUFSIZE);
+    
     char vectorStr[MAX_ROW][MAX_CHAR_LEN];
+    // Get the slice
     SlicetoString(slice, client_counter,vectorStr);
     
-    
-    char* finalStr = malloc(sizeof(char) * MAX_COL);
+    // and spaces 
+    char* finalStr = malloc(sizeof(char) *  MAX_ROW * MAX_COL * MAX_CHAR_LEN);
     for(int n = 0; n < slice.cols; n++){
+        
         strcat(finalStr,vectorStr[n]);
         strcat(finalStr," ");
-    }
-    
-    printf("\nVectorStr is : %s\n", finalStr);
-    // Populate buffer
-     for (int i = 0; i < BUFSIZE; i++)
-    {
-        if (finalStr[i] != '\0')
-        {
-            buf[i] = finalStr[i];
-        }
 
-        printf("msg[%d] = %c\n", i, finalStr[i]);
+    }
+    strcat(finalStr,"#");
+
+    // add B
+   
+    char bStr[MAX_ROW][MAX_CHAR_LEN];
+    SlicetoString(B,client_counter,bStr);
+    printf("B String : %s\n",bStr);
+   for(int n = 0; n < BUFSIZE; n++){
+        strcat(finalStr,bStr[n]);
+        strcat(finalStr," ");
+    }
+    strcat(finalStr,"#");
+    // printf("\nfinalString is -> %s",finalStr);
+    // for(int r = 0; r  < B.rows; r++){
+    //     for(int c = 0; c < B.cols; c++){
+    //         strcat(finalStr, B.array[r][c]);
+    //         strcat(finalStr," ");
+    //     }
+    // }
+
+
+
+    buf[0] = client_counter;
+    // Populate buffer
+     for (int i = 1; i < BUFSIZE; i++)
+    {
+        if (finalStr[i-1] != '\0')
+        {
+            buf[i] = finalStr[i-1];
+        }
+        // buf[i] = '\0';
+
         
     }
    
     buf[BUFSIZE - 1] = '\0'; // add a end of line character
 
     displayMatrix(slice);
-    // char _buf[BUFSIZE];
 
     /* Network sending stuff */
     size_t totWritten;

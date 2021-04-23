@@ -23,8 +23,11 @@ SomeMatrix createB(int N);
 SomeMatrix multiplyMatrix(SomeMatrix A, SomeMatrix B);
 void displayMatrix(SomeMatrix matrix);
 void SlicetoString(SomeMatrix M, int index, char str[MAX_ROW][MAX_CHAR_LEN]);
+SomeMatrix MultiplyBySlice(SomeMatrix slice, SomeMatrix M, int index);
 
-
+SomeMatrix A;
+SomeMatrix B;
+SomeMatrix C;
 /* Methods */
 
 /**
@@ -185,6 +188,8 @@ SomeMatrix multiplyMatrix(SomeMatrix A, SomeMatrix B)
 }
 SomeMatrix MultiplyBySlice(SomeMatrix slice, SomeMatrix M, int index)
 {
+    displayMatrix(slice);
+    displayMatrix(M);
     SomeMatrix vector;
     vector.array = create2DArray(1, M.cols);
     vector.size = M.size;
@@ -195,14 +200,14 @@ SomeMatrix MultiplyBySlice(SomeMatrix slice, SomeMatrix M, int index)
     for (int r = 0; r < M.rows; r++)
     {
         // inside loop for index
-        for (int i = 0; i < M.size; i++)
+        for (int i = 0; i < M.cols; i++)
         {
             // printf("%.0f , %.0f\n", slice.array[0][i],M.array[i][r]);
             sum += slice.array[0][i] * M.array[i][r];
         }
 
-        vector.array[0][r] = sum;
-        // printf("vector sum = %.0f\n",vector.array[0][r]);
+        vector.array[r][0] = sum;
+        // printf("vector sum = %.0f\n",vector.array[0][0]);
         sum = 0;
     }
 
@@ -232,19 +237,18 @@ void SlicetoString(SomeMatrix M, int index, char str[MAX_ROW][MAX_CHAR_LEN])
     for(int r = 0; r < MAX_ROW; r++){
         for(int c = 0; c < MAX_CHAR_LEN; c++){
             // printf("str init [%d][%d] = %c\n",r,c,str[r][c]);
-            str[r][c] = '\n';
+            str[r][c] = '\0';
             //  printf("NEW str init [%d][%d] = %c\n",r,c,str[r][c]);
         }
     }
-    char buffer[32];
-    int spaceCounter = 1;
+    
     printf("\nSlicing...\n");
     for (int r = 0; r < M.rows; r++)
     {
         for (int c = 0; c < M.cols; c++)
         {
             // make sure to break numbers up into units
-            sprintf(str[c], "%.02f", M.array[0][c]);      
+            sprintf(str[c], "%.02f", M.array[r][c]);      
         }
 
     }
@@ -263,17 +267,24 @@ SomeMatrix StringToMatrix(char vectorStr[MAX_CHAR_LEN])
     char** numbers[MAX_CHAR_LEN];
     float values[strlen(vectorStr)];
 
-    printf("\nTRANSFORMING %s\n",vectorStr);
+    // printf("\nTRANSFORMING %s\n",vectorStr);
 
     char* num = strtok(vectorStr, " ");
     while(num != NULL){
-        numbers[c_count] = &num;
-        float value = atoi(*numbers[c_count]);
-        array[c_count] = value;
-        printf("numberStr : %s\t",*numbers[c_count]);
-        printf("value : %f\n",value);
-        c_count++;
-        num = strtok(NULL, " ");
+        if(*num != '\0'){
+            numbers[c_count] = &num;
+            // if(**numbers[c_count] == '#'){
+                
+            //     break;
+            // }
+            float value = atoi(*numbers[c_count]);
+            array[c_count] = value;
+            // printf("numberStr : %s\t",*numbers[c_count]);
+            // printf("value : %f\n",value);
+            c_count++;
+            num = strtok(NULL, " ");    
+        }
+        
 
     }
     /*  Populate our matrix array   */

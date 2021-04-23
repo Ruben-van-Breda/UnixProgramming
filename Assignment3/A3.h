@@ -10,5 +10,4 @@
 
 #define NUMTHREADS 1
 
-
 void * ThreadFunc(void *argument);

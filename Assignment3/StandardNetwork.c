@@ -12,7 +12,7 @@
 
 #define PORTNUM "49999" /* Port number for server */
 #define BACKLOG 10
-#define BUFSIZE 32
+#define BUFSIZE 64
 char buf[BUFSIZE];
 void SetUp()
 {
@@ -231,8 +231,10 @@ void ClientSend(int socket_fd, char msg[])
    for (c = 0; c < BUFSIZE - 1; c++) // populate buffer with desired data
    {
       //   buf[c] = 'A' + (random() % 26);
-      if (c < strlen(msg))
+      // if (c < strlen(msg))
          buf[c] = msg[c];
+
+
    }
    buf[BUFSIZE - 1] = '\0'; // add a end of line character
 
