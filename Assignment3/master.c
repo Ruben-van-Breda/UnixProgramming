@@ -13,6 +13,12 @@ void breakIntoSlices(SomeMatrix a, SomeMatrix b);
 int client_counter = 0;
 int main()
 {
+
+     /* Set the StandardNetwork.ServerRecieveFunc pointer
+    to point to the local MyServerRecieve */
+    ServerRecieveFunc = MyServerRecieve;
+    ServerSendFunc = MyServerSends;
+
     printf("\n--- Master --- \n");
     printf("Enter size of matrices n: ");
     scanf("%d", &N);
@@ -31,10 +37,7 @@ int main()
 
     int socketID = ConnectToAsServerSocket();
     printf("\n%d", socketID);
-    /* Set the StandardNetwork.ServerRecieveFunc pointer
-    to point to the local MyServerRecieve */
-    ServerRecieveFunc = MyServerRecieve;
-    ServerSendFunc = MyServerSends;
+   
     SeverActive(socketID); //*/
     // DebugCode();
 }
@@ -103,7 +106,7 @@ void breakIntoSlices(SomeMatrix A, SomeMatrix B)
     for (int k = 0; k < A.cols; k++)
     {
 
-        slice = GetSlice(k, A);
+        slice = GetRow(k, A);
         printf("slice \t");
         displayMatrix(slice);
         SomeMatrix vector = MultiplyBySlice(slice, B, k);
@@ -113,11 +116,14 @@ void breakIntoSlices(SomeMatrix A, SomeMatrix B)
 
 /* Impelement a send functon for the server host */
 void MyServerRecieve(int fd, char buf[BUFSIZE])
-{
+{   bzero(buf, BUFSIZE);
     printf("My Custom Server Recieved Function:\n");
 
     size_t totRead;
     char *bufr = buf;
+
+    int client_id = buf[0];
+    
     for (totRead = 0; totRead < BUFSIZE;)
     {
         ssize_t numRead = read(fd, bufr, BUFSIZE - totRead);
@@ -135,43 +141,56 @@ void MyServerRecieve(int fd, char buf[BUFSIZE])
         totRead += numRead;
         bufr += numRead;
     }
-    printf("Server Received %s\n", buf);
+    printf("\nServer Received data from client %d:  %s\n",client_id, buf);
+    printf("\nMyServerRecieve: C[%d] <= %s",client_id,buf);
+    
+    /*      Modify Matrix C    */
+    C.array[client_id][0] = 1;
 }
 
 void MyServerSends(int client_file_descriptor, char buf[BUFSIZE])
 {
     /* Server Writes / ServerSend */
-    if (client_counter >= A.size)
+    
+    if (client_counter >= A.size) // matrix complete
     {
         printf("COMPLETED MATRIX.\n");
         displayMatrix(C);
-        return;
+        exit(EXIT_SUCCESS);
     }
-    SomeMatrix slice = GetSlice(client_counter, A);
-    printf("Server is partitioning ...");
+    printf("\nServer is partitioning ...\n");
+    /*  Get the slice matrix of matrix A */
+    SomeMatrix slice = GetRow(client_counter, A);
     bzero(buf, BUFSIZE);
-    
+        // Get the slice as a string
     char vectorStr[MAX_ROW][MAX_CHAR_LEN];
-    // Get the slice
     SlicetoString(slice, client_counter,vectorStr);
     
-    // and spaces 
+        // and spaces inorder to identify the start and end of a number
+    /* Create and append numbers to the finalStr char * */
     char* finalStr = malloc(sizeof(char) *  MAX_ROW * MAX_COL * MAX_CHAR_LEN);
-    for(int n = 0; n < slice.cols; n++){
+    int bufIndexCounter = 0;
+    int n = 0;
+    for(n = 0; n < slice.cols; n++){
         
-        strcat(finalStr,vectorStr[n]);
+        strcat(finalStr,vectorStr[n]); // append the vectorStr
         strcat(finalStr," ");
 
     }
-    strcat(finalStr,"#");
+    strcat(finalStr,"#"); // append end tokken
+    bufIndexCounter += n;
 
-    // add B
-   
+    /* Append Matrix B */
     char bStr[MAX_ROW][MAX_CHAR_LEN];
-    SlicetoString(B,client_counter,bStr);
-    printf("B String : %s\n",bStr);
-   for(int n = 0; n < BUFSIZE; n++){
-        strcat(finalStr,bStr[n]);
+    MatrixToString(B,bStr);
+    printf("B String : \n");
+    int i; // B size counater
+    for(i = 0; i < MAX_ROW; i ++){
+        printf("%s\n",bStr[i]);
+    }
+    /*  Populate finalStr with matrix B*/
+    for(int j = 0; j < i; j++){
+        strcat(finalStr,bStr[j]);
         strcat(finalStr," ");
     }
     strcat(finalStr,"#");
@@ -184,8 +203,8 @@ void MyServerSends(int client_file_descriptor, char buf[BUFSIZE])
     // }
 
 
-
-    buf[0] = client_counter;
+    sprintf(&buf[0], "%d", client_counter);  // add client counter prefix
+    // buf[0] = client_counter;
     // Populate buffer
      for (int i = 1; i < BUFSIZE; i++)
     {
@@ -193,6 +212,7 @@ void MyServerSends(int client_file_descriptor, char buf[BUFSIZE])
         {
             buf[i] = finalStr[i-1];
         }
+    
         // buf[i] = '\0';
 
         

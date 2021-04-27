@@ -160,12 +160,20 @@ int SeverActive(int mysocket)
 
       /* Server Recieves */
       char buf[BUFSIZE];
-      ServerRecieveFunc = ServerRecieveFunc == NULL ? ServerReceive : ServerRecieveFunc;
-      ServerRecieveFunc(client_file_descriptor, buf);
+      
+      // ServerRecieveFunc = ServerRecieveFunc == NULL ? ServerReceive : ServerRecieveFunc;
+      // ServerRecieveFunc(client_file_descriptor, buf);
 
       /* Server Writes / ServerSend */
       ServerSendFunc = ServerSendFunc == NULL ? ServerSend : ServerSendFunc;
       ServerSendFunc(client_file_descriptor, buf);
+
+ /* Server Recieves */
+      
+      ServerRecieveFunc = ServerRecieveFunc == NULL ? ServerReceive : ServerRecieveFunc;
+      ServerRecieveFunc(client_file_descriptor, buf);
+
+
       // /* Server Writes / ServerSend */
       // size_t totWritten;
       // const char *bufw = buf;
@@ -225,14 +233,19 @@ void ServerSend(int file_descriptor, char buf[BUFSIZE]){
 }
 void ClientSend(int socket_fd, char msg[])
 {
-
+   
    int c; // counter
    srand(time(NULL));
+
+   /* Clear buffer */
+   bzero(buf,BUFSIZE);
    for (c = 0; c < BUFSIZE - 1; c++) // populate buffer with desired data
    {
       //   buf[c] = 'A' + (random() % 26);
-      // if (c < strlen(msg))
+      if (c < strlen(msg))
          buf[c] = msg[c];
+      else
+         buf[c] = '\0';
 
 
    }

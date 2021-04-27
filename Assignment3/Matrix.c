@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MAX_ROW 10
-#define MAX_COL 10
+#define MAX_ROW 20
+#define MAX_COL 20
 #define MAX_CHAR_LEN 32
 struct MatrixObject
 {
@@ -188,8 +188,7 @@ SomeMatrix multiplyMatrix(SomeMatrix A, SomeMatrix B)
 }
 SomeMatrix MultiplyBySlice(SomeMatrix slice, SomeMatrix M, int index)
 {
-    displayMatrix(slice);
-    displayMatrix(M);
+
     SomeMatrix vector;
     vector.array = create2DArray(1, M.cols);
     vector.size = M.size;
@@ -214,7 +213,7 @@ SomeMatrix MultiplyBySlice(SomeMatrix slice, SomeMatrix M, int index)
     return vector;
 }
 
-SomeMatrix GetSlice(int sliceIndex, SomeMatrix m)
+SomeMatrix GetRow(int sliceIndex, SomeMatrix m)
 {
     /*  Get the row of matrix m at index of sliceIndex*/
     SomeMatrix res;
@@ -231,25 +230,51 @@ SomeMatrix GetSlice(int sliceIndex, SomeMatrix m)
     return res;
 }
 
-void SlicetoString(SomeMatrix M, int index, char str[MAX_ROW][MAX_CHAR_LEN])
-{
-    // initialise the str //
+void MatrixToString(SomeMatrix M, char str[MAX_ROW][MAX_CHAR_LEN]){
+    /* initialise the str */
     for(int r = 0; r < MAX_ROW; r++){
         for(int c = 0; c < MAX_CHAR_LEN; c++){
-            // printf("str init [%d][%d] = %c\n",r,c,str[r][c]);
             str[r][c] = '\0';
-            //  printf("NEW str init [%d][%d] = %c\n",r,c,str[r][c]);
+        }
+    }
+
+    int r = 0;  int c = 0;
+    for (r = 0; r < M.rows; r++)
+    {
+        for (c = 0; c < M.cols; c++)
+        {
+            // make sure to break numbers up into units
+            sprintf(&str[r][c], "%.0f ", M.array[r][c]);  
+            strcat(&str[r][c]," ");
+            if(c==M.cols)
+                  str[r][c] = '&' ; // end of [,,,] col
+        }
+       
+
+    }
+}
+
+void SlicetoString(SomeMatrix M, int index, char str[MAX_ROW][MAX_CHAR_LEN])
+{
+    /* initialise the str */
+    for(int r = 0; r < MAX_ROW; r++){
+        for(int c = 0; c < MAX_CHAR_LEN; c++){
+            str[r][c] = '\0';
         }
     }
     
     printf("\nSlicing...\n");
-    for (int r = 0; r < M.rows; r++)
+    /*  Get the values of the matrix and cast it to a string and place this in the str char array */
+    int r = 0;
+    int c = 0;
+    for (r = 0; r < M.rows; r++)
     {
-        for (int c = 0; c < M.cols; c++)
+        for (c = 0; c < M.cols; c++)
         {
             // make sure to break numbers up into units
             sprintf(str[c], "%.02f", M.array[r][c]);      
         }
+        *str[r+c] = '&' ;
 
     }
 

@@ -42,7 +42,7 @@ void *Multiply(void* argument){
     // Block
     pthread_mutex_lock (&mutexsum);
     int arg = *((int *)argument);
-    SomeMatrix slice = GetSlice(arg, A);
+    SomeMatrix slice = GetRow(arg, A);
     SomeMatrix vector = MultiplyBySlice(slice,B,arg);
     C.array[arg] = *vector.array;
     displayMatrix(vector);
