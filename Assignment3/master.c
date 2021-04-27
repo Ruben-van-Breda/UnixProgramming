@@ -186,10 +186,12 @@ void MyServerSends(int client_file_descriptor, char buf[BUFSIZE])
     printf("B String : \n");
     int i; // B size counater
     for(i = 0; i < MAX_ROW; i ++){
+        if(*bStr[i] == '\0') break;
         printf("%s\n",bStr[i]);
     }
+    printf("I = %d\n",i);
     /*  Populate finalStr with matrix B*/
-    for(int j = 0; j < i; j++){
+    for(int j = 0; j <= i; j++){
         strcat(finalStr,bStr[j]);
         strcat(finalStr," ");
     }

@@ -240,12 +240,12 @@ void MatrixToString(SomeMatrix M, char str[MAX_ROW][MAX_CHAR_LEN]){
 
     int r = 0;  int c = 0;
     for (r = 0; r < M.rows; r++)
-    {
+    {   char buf[32];
         for (c = 0; c < M.cols; c++)
         {
             // make sure to break numbers up into units
-            sprintf(&str[r][c], "%.0f ", M.array[r][c]);  
-            strcat(&str[r][c]," ");
+            sprintf(buf, "%.0f ", M.array[r][c]);  
+            strcat(str[r],buf);
             if(c==M.cols)
                   str[r][c] = '&' ; // end of [,,,] col
         }
