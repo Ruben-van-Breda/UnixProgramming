@@ -177,7 +177,7 @@ void MyServerSends(int client_file_descriptor, char buf[BUFSIZE])
         strcat(finalStr," ");
 
     }
-    strcat(finalStr,"#"); // append end tokken
+    strcat(finalStr,"# "); // append end tokken
     bufIndexCounter += n;
 
     /* Append Matrix B */
@@ -192,9 +192,9 @@ void MyServerSends(int client_file_descriptor, char buf[BUFSIZE])
     /*  Populate finalStr with matrix B*/
     for(int j = 0; j <= i; j++){
         strcat(finalStr,bStr[j]);
-        strcat(finalStr," ");
+        strcat(finalStr,"& ");
     }
-    strcat(finalStr,"#");
+    strcat(finalStr,"# ");
     // printf("\nfinalString is -> %s",finalStr);
     // for(int r = 0; r  < B.rows; r++){
     //     for(int c = 0; c < B.cols; c++){

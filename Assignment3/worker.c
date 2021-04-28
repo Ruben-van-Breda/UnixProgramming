@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 
     char* B_matrix_str;
     /* Break up data recieved. # end of matrix  */
-    for(int i = 0; i < BUFSIZE; i++){
+    for(int i = 1; i < BUFSIZE; i++){
         if(mybuf[i] == '#'){
             mybuf[i] = '\0';
             B_matrix_str = &mybuf[i+1];
@@ -34,18 +34,18 @@ int main(int argc, char *argv[])
     printf("\n Vector Matrix \n");
     displayMatrix(vector);
 
-    SomeMatrix bMatrix = StringToMatrix(B_matrix_str);
+    SomeMatrix bMatrix = FromStringToMatrix(B_matrix_str);
     printf("\n B Matrix \n");
     displayMatrix(bMatrix);
 
     printf("\nPerforming dot product...\n");
   
 
-    SomeMatrix product = MultiplyBySlice(vector,B,0);
-    product.rows = 1;
-    product.cols = vector.cols;
-    // // printf("product [0][0] -> %.f\n",product.array[0][0]);
-    displayMatrix(product);
+    // SomeMatrix product = MultiplyBySlice(vector,bMatrix,0);
+    // product.rows = 1;
+    // product.cols = vector.cols;
+    // // // printf("product [0][0] -> %.f\n",product.array[0][0]);
+    // displayMatrix(product);
 
     /* Send product back to the master */
     char* out_msg = "99 99 99";
