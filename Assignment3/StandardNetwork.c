@@ -168,7 +168,7 @@ int SeverActive(int mysocket)
       ServerSendFunc = ServerSendFunc == NULL ? ServerSend : ServerSendFunc;
       ServerSendFunc(client_file_descriptor, buf);
 
- /* Server Recieves */
+      /* Server Recieves */
       
       ServerRecieveFunc = ServerRecieveFunc == NULL ? ServerReceive : ServerRecieveFunc;
       ServerRecieveFunc(client_file_descriptor, buf);
@@ -231,7 +231,7 @@ void ServerReceive(int file_descriptor, char buf[BUFSIZE])
 void ServerSend(int file_descriptor, char buf[BUFSIZE]){
    printf("TODO: Impelement server send logic");
 }
-void ClientSend(int socket_fd, char msg[])
+void ClientSend(int socket_fd, char msg[],int clientNum)
 {
    
    int c; // counter
@@ -239,11 +239,16 @@ void ClientSend(int socket_fd, char msg[])
 
    /* Clear buffer */
    bzero(buf,BUFSIZE);
-   for (c = 0; c < BUFSIZE - 1; c++) // populate buffer with desired data
+   buf[0] = clientNum + '0';
+   buf[1] = ' ';
+   printf("\nnum : %d, Sending client id of %c\n",clientNum,buf[0]);
+   
+   // sprintf(buf, "%d", clientNum);
+   for (c = 2; c < BUFSIZE - 1; c++) // populate buffer with desired data
    {
       //   buf[c] = 'A' + (random() % 26);
       if (c < strlen(msg))
-         buf[c] = msg[c];
+         buf[c] = msg[c-2];
       else
          buf[c] = '\0';
 

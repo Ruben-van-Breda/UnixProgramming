@@ -116,13 +116,14 @@ void breakIntoSlices(SomeMatrix A, SomeMatrix B)
 
 /* Impelement a send functon for the server host */
 void MyServerRecieve(int fd, char buf[BUFSIZE])
-{   bzero(buf, BUFSIZE);
+{   
+    bzero(buf, BUFSIZE);
     printf("My Custom Server Recieved Function:\n");
 
     size_t totRead;
     char *bufr = buf;
 
-    int client_id = buf[0];
+    
     
     for (totRead = 0; totRead < BUFSIZE;)
     {
@@ -141,11 +142,14 @@ void MyServerRecieve(int fd, char buf[BUFSIZE])
         totRead += numRead;
         bufr += numRead;
     }
+    int client_id = buf[0] - '0';
     printf("\nServer Received data from client %d:  %s\n",client_id, buf);
-    printf("\nMyServerRecieve: C[%d] <= %s",client_id,buf);
-    
+    buf = &buf[1]; // trim off client number
     /*      Modify Matrix C    */
-    C.array[client_id][0] = 1;
+    SomeMatrix returned = StringToMatrix(buf);
+    printf("\nReturned Matrix \n");
+    displayMatrix(returned);
+    C.array[client_id] = returned.array[0];
 }
 
 void MyServerSends(int client_file_descriptor, char buf[BUFSIZE])

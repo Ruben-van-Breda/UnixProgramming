@@ -319,6 +319,9 @@ SomeMatrix StringToMatrix(char vectorStr[MAX_CHAR_LEN])
             c_count++;
             num = strtok(NULL, " ");
         }
+        else{
+            break;
+        }
     }
     /*  Populate our matrix array   */
     ret.array = create2DArray(1, c_count);
