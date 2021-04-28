@@ -370,7 +370,7 @@ SomeMatrix FromStringToMatrix(char vectorStr[MAX_CHAR_LEN])
                 numbers[num_index] = &num;
                 float value = atoi(*numbers[num_index]);
 
-                int _cIndex = c_count != 0 ? (int)(num_index / c_count) : num_index;
+                int _cIndex = c_count != 0 ? (int)(num_index % c_count) : num_index;
 
                 array[row_index][_cIndex] = value;
                 printf("numberStr : %s\t", *numbers[num_index]);
