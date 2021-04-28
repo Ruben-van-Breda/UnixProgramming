@@ -189,7 +189,6 @@ void MyServerSends(int client_file_descriptor, char buf[BUFSIZE])
         if(*bStr[i] == '\0') break;
         printf("%s\n",bStr[i]);
     }
-    printf("I = %d\n",i);
     /*  Populate finalStr with matrix B*/
     for(int j = 0; j <= i; j++){
         strcat(finalStr,bStr[j]);
@@ -222,7 +221,7 @@ void MyServerSends(int client_file_descriptor, char buf[BUFSIZE])
    
     buf[BUFSIZE - 1] = '\0'; // add a end of line character
 
-    displayMatrix(slice);
+  
 
     /* Network sending stuff */
     size_t totWritten;

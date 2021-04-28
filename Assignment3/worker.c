@@ -41,11 +41,11 @@ int main(int argc, char *argv[])
     printf("\nPerforming dot product...\n");
   
 
-    // SomeMatrix product = MultiplyBySlice(vector,B,0);
-    // // product.rows = 1;
-    // // product.cols = vector.cols;
-    // // // printf("product [0][0] -> %.f\n",product.array[0][0]);
-    // displayMatrix(product);
+    SomeMatrix product = MultiplyBySlice(vector,B,0);
+    product.rows = 1;
+    product.cols = vector.cols;
+    // // printf("product [0][0] -> %.f\n",product.array[0][0]);
+    displayMatrix(product);
 
     /* Send product back to the master */
     char* out_msg = "99 99 99";

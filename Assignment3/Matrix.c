@@ -298,10 +298,10 @@ SomeMatrix StringToMatrix(char vectorStr[MAX_CHAR_LEN])
     while(num != NULL){
         if(*num != '\0'){
             numbers[c_count] = &num;
-            // if(**numbers[c_count] == '#'){
+            if(**numbers[c_count] == '#'){
                 
-            //     break;
-            // }
+                break;
+            }
             float value = atoi(*numbers[c_count]);
             array[c_count] = value;
             // printf("numberStr : %s\t",*numbers[c_count]);
