@@ -195,6 +195,7 @@ SomeMatrix MultiplyBySlice(SomeMatrix slice, SomeMatrix M, int index)
     vector.rows = 1;
     vector.cols = M.cols;
     float sum = 0;
+    int col_counter = 0;
     /* Multiply Matrices */
     for (int r = 0; r < M.rows; r++)
     {
@@ -203,6 +204,7 @@ SomeMatrix MultiplyBySlice(SomeMatrix slice, SomeMatrix M, int index)
         {
             // printf("%.0f , %.0f\n", slice.array[0][i],M.array[i][r]);
             sum += slice.array[0][i] * M.array[i][r];
+
         }
 
         vector.array[r][0] = sum;
