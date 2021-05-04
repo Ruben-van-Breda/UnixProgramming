@@ -25,20 +25,16 @@ ConvertAndMoveFile(){
     THEPATH="${1/$source}";
     THEPATH="${THEPATH/$FULLNAME}"
 
-    # Check if the file extension is .png
+    # Check if the file extension is png
     case  ${EXTENSION} in 
         "png")
             #Check if the directory doesn't exits (basicly any sub dir's)
-            # if [ ! -d "$dest$THEPATH" ]; then
-            #     mkdir -p "$dest$THEPATH" 
-            # fi
             [ -d "$dest$THEPATH" ] || mkdir -p "$dest$THEPATH" 
             # Convert .png to .jpg and store in destination
             convert "$1" "$dest$THEPATH/$NAME.jpg";
-
             ;;
         *)
-        # if its not a .png do nothing
+            # if not a .png do nothing
         ;;  
     esac
     return;
@@ -92,8 +88,8 @@ if [ ! -d $2 ]; then
     exit -1
 fi
 
-# loop throught the source folders content
-for file in "$1"/*; do
+# loop through the source folders content
+for file in "$source"/*; do
     #recursivly look inside inner directories
     if [ -d "$file" ]; then
         searchDir "$file"
